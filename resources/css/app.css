@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-brand-white text-brand-ink antialiased;
+    }
+
+    ::selection {
+        @apply bg-brand-primary text-brand-ink;
+    }
+}
+
+@layer components {
+    .focus-ring {
+        @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+    }
+
+    .reveal-on-scroll {
+        @apply translate-y-6 opacity-0 transition duration-700 ease-out;
+    }
+
+    .reveal-on-scroll.is-visible {
+        @apply translate-y-0 opacity-100;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-on-scroll {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+}
