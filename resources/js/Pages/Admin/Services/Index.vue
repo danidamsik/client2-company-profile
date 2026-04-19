@@ -131,12 +131,9 @@ const deleteService = (service) => {
 <template>
     <Head title="Layanan" />
 
-    <AdminLayout
-        title="Layanan"
-        description="Kelola daftar jasa pengamanan yang akan tampil di halaman publik."
-    >
+    <AdminLayout title="Layanan">
         <div class="space-y-6">
-            <section class="grid gap-4 md:grid-cols-3">
+            <section class="grid gap-4 md:grid-cols-2">
                 <div class="rounded-lg border border-brand-line bg-white p-5 shadow-sm">
                     <p class="text-body-sm font-semibold uppercase text-brand-accent">Total Layanan</p>
                     <p class="mt-3 text-3xl font-bold text-brand-ink">{{ summary.total }}</p>
@@ -147,12 +144,6 @@ const deleteService = (service) => {
                     <p class="text-body-sm font-semibold uppercase text-brand-accent">Update Terakhir</p>
                     <p class="mt-3 text-xl font-bold text-brand-ink">{{ summary.latestUpdated || 'Belum ada' }}</p>
                     <p class="mt-1 text-body-sm text-stone-600">Dipakai untuk review konten layanan.</p>
-                </div>
-
-                <div class="rounded-lg border border-brand-line bg-brand-ink p-5 text-white shadow-sm">
-                    <p class="text-body-sm font-semibold uppercase text-brand-primary">Alur CRUD</p>
-                    <p class="mt-3 text-xl font-bold">Create/update via modal</p>
-                    <p class="mt-1 text-body-sm text-white/70">Tambah dan edit layanan berjalan dari dialog admin.</p>
                 </div>
             </section>
 

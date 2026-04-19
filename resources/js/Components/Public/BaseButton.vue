@@ -29,11 +29,11 @@ defineEmits(['click']);
 const tag = computed(() => (props.href ? 'a' : 'button'));
 
 const baseClasses =
-    'focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border font-semibold transition duration-200';
+    'focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border font-semibold shadow-sm transition duration-200 active:translate-y-px';
 
 const variantClasses = computed(() => ({
-    primary: 'border-brand-primary bg-brand-primary text-brand-ink hover:border-brand-primaryDark hover:bg-brand-primaryDark',
-    secondary: 'border-brand-ink bg-brand-ink text-white hover:border-brand-charcoal hover:bg-brand-charcoal',
+    primary: 'border-brand-primary bg-brand-primary text-brand-ink hover:border-brand-primaryDark hover:bg-brand-primaryDark hover:shadow-card',
+    secondary: 'border-brand-ink bg-brand-ink text-white hover:border-brand-charcoal hover:bg-brand-charcoal hover:shadow-card',
     outline: 'border-brand-line bg-white text-brand-ink hover:border-brand-primary hover:bg-brand-soft',
     ghost: 'border-transparent bg-transparent text-brand-ink hover:bg-brand-soft',
 }[props.variant]));

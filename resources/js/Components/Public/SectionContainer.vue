@@ -29,10 +29,10 @@ const toneClasses = computed(() => ({
 
 const spacingClasses = computed(() => {
     if (props.tightTop) {
-        return 'pt-10 pb-18 md:pt-12 md:pb-22';
+        return 'pt-10 pb-16 md:pt-12 md:pb-22';
     }
 
-    return props.compact ? 'py-14 md:py-16' : 'py-18 md:py-22';
+    return props.compact ? 'py-14 md:py-16' : 'py-16 md:py-22';
 });
 </script>
 

@@ -13,13 +13,44 @@ import SectionHeading from '@/Components/Public/SectionHeading.vue';
 import ServiceCard from '@/Components/Public/ServiceCard.vue';
 
 const props = defineProps({
+    seo: {
+        type: Object,
+        default: () => ({
+            title: 'PT Secure Guard Indonesia | Jasa Security Profesional',
+            description: 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan industri, perumahan, dan event di Indonesia.',
+            keywords: 'jasa security, jasa keamanan, security perusahaan, pengamanan event',
+            url: '/',
+            image: '/images/security-guard-entrance.jpg',
+            type: 'website',
+            siteName: 'PT Secure Guard Indonesia',
+            locale: 'id_ID',
+        }),
+    },
+    publicHeroSection: {
+        type: Object,
+        default: null,
+    },
+    publicAboutSection: {
+        type: Object,
+        default: null,
+    },
+    publicCompanyInformation: {
+        type: Object,
+        default: null,
+    },
+    publicServices: {
+        type: Array,
+        default: () => [],
+    },
+    publicCertifications: {
+        type: Array,
+        default: () => [],
+    },
     publicGalleries: {
         type: Array,
         default: () => [],
     },
 });
-
-const whatsappUrl = 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.';
 
 const contactForm = useForm({
     name: '',
@@ -35,14 +66,14 @@ const trustItems = [
     { value: 'Responsif', label: 'Konsultasi cepat via WhatsApp' },
 ];
 
-const advantages = [
+const defaultAdvantages = [
     'Penempatan personel menyesuaikan risiko area klien.',
     'Koordinasi lapangan jelas untuk shift, patroli, dan akses masuk.',
     'Pelaporan kegiatan membantu manajemen memantau kondisi keamanan.',
     'Pendekatan pelayanan tetap ramah tanpa mengurangi ketegasan.',
 ];
 
-const values = [
+const defaultValues = [
     {
         title: 'Visi',
         description: 'Menjadi mitra keamanan yang dipercaya oleh perusahaan dan instansi di Indonesia.',
@@ -57,114 +88,51 @@ const values = [
     },
 ];
 
-const serviceItems = [
-    {
-        title: 'Security Perusahaan',
-        category: 'Korporat',
-        description: 'Personel keamanan untuk kantor, gudang, pabrik, dan area operasional bisnis.',
-        icon: 'shield',
-        points: ['Kontrol akses tamu dan karyawan', 'Patroli shift area kerja', 'Laporan aktivitas harian'],
-    },
-    {
-        title: 'Pengamanan Event',
-        category: 'Event',
-        description: 'Tim lapangan untuk event perusahaan, pameran, gathering, dan kegiatan publik.',
-        icon: 'radio',
-        points: ['Pengaturan akses peserta', 'Koordinasi titik rawan', 'Pengamanan crowd flow'],
-    },
-    {
-        title: 'Patroli Area',
-        category: 'Monitoring',
-        description: 'Pengawasan rutin untuk menjaga aset, akses, dan aktivitas di area klien.',
-        icon: 'route',
-        points: ['Jadwal patroli terukur', 'Pengecekan perimeter', 'Eskalasi insiden cepat'],
-    },
-    {
-        title: 'Security Perumahan',
-        category: 'Residensial',
-        description: 'Pengamanan cluster, apartemen, dan kawasan hunian dengan pendekatan ramah penghuni.',
-        icon: 'building',
-        points: ['Pencatatan tamu', 'Pengawasan gerbang', 'Patroli lingkungan'],
-    },
-    {
-        title: 'Pengamanan Kawasan Industri',
-        category: 'Industri',
-        description: 'Tim keamanan untuk area produksi, logistik, dan gudang dengan prosedur operasional ketat.',
-        icon: 'shield',
-        points: ['Pengawasan loading area', 'Kontrol kendaraan', 'Penjagaan aset strategis'],
-    },
-    {
-        title: 'Reception Security',
-        category: 'Front Office',
-        description: 'Petugas keamanan yang menjaga area depan sekaligus membantu alur tamu secara profesional.',
-        icon: 'building',
-        points: ['Penerimaan tamu', 'Screening awal', 'Koordinasi dengan admin'],
-    },
-];
+const serviceItems = computed(() => props.publicServices);
+const certificationItems = computed(() => props.publicCertifications);
+const galleryItems = computed(() => props.publicGalleries);
+const companyInfo = computed(() => ({
+    logo: props.publicCompanyInformation?.logo || '',
+    name: props.publicCompanyInformation?.name || 'PT Secure Guard Indonesia',
+    email: props.publicCompanyInformation?.email || 'hello@secureguard.test',
+    whatsapp: props.publicCompanyInformation?.whatsapp || '+62 812 3456 7890',
+    whatsapp_number: props.publicCompanyInformation?.whatsapp_number || '6281234567890',
+    whatsapp_url: props.publicCompanyInformation?.whatsapp_url || 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.',
+    location: props.publicCompanyInformation?.location || 'Jakarta, Indonesia',
+}));
+const whatsappUrl = computed(() => companyInfo.value.whatsapp_url);
+const emailUrl = computed(() => `mailto:${companyInfo.value.email}`);
+const heroContent = computed(() => ({
+    eyebrow: props.publicHeroSection?.eyebrow || 'Security Profesional',
+    badge: props.publicHeroSection?.badge || 'Siap Operasional',
+    title: props.publicHeroSection?.title || companyInfo.value.name,
+    subtitle: props.publicHeroSection?.subtitle || 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan personel sigap, terlatih, dan mudah dikoordinasikan.',
+    primary_cta_label: props.publicHeroSection?.primary_cta_label || 'Hubungi Kami',
+    primary_cta_url: props.publicHeroSection?.primary_cta_url || whatsappUrl.value,
+    secondary_cta_label: props.publicHeroSection?.secondary_cta_label || 'Konsultasi Sekarang',
+    secondary_cta_url: props.publicHeroSection?.secondary_cta_url || whatsappUrl.value,
+    image: props.publicHeroSection?.image || '/images/security-guard-entrance.jpg',
+    note: props.publicHeroSection?.note || 'Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.',
+}));
+const aboutContent = computed(() => ({
+    eyebrow: props.publicAboutSection?.eyebrow || 'Tentang Kami',
+    title: props.publicAboutSection?.title || 'Mitra keamanan yang menjaga ritme operasional tetap tenang',
+    subtitle: props.publicAboutSection?.subtitle || `${companyInfo.value.name} membantu perusahaan mengelola keamanan dengan personel yang terlatih, prosedur kerja yang jelas, dan komunikasi yang mudah diikuti.`,
+    image: props.publicAboutSection?.image || '/images/security-guard-entrance.jpg',
+}));
+const aboutAdvantages = computed(() => (
+    props.publicAboutSection?.advantages?.length ? props.publicAboutSection.advantages : defaultAdvantages
+));
+const aboutValues = computed(() => {
+    const values = props.publicAboutSection?.values
+        ?.filter((item) => item.description)
+        .map((item) => ({
+            title: item.title,
+            description: item.description,
+        })) || [];
 
-const certificationItems = [
-    {
-        title: 'Sertifikat Badan Usaha Jasa Pengamanan',
-        issuer: 'Legalitas Perusahaan',
-        image: '/storage/certifications/bujp-certificate.svg',
-        alt: 'Ilustrasi sertifikat BUJP PT Secure Guard Indonesia',
-        description: 'Dokumen legal perusahaan untuk penyediaan jasa pengamanan profesional.',
-        tags: ['BUJP', 'Legal', 'Perusahaan'],
-    },
-    {
-        title: 'Sertifikat Pelatihan Gada Pratama',
-        issuer: 'Kompetensi Personel',
-        image: '/storage/certifications/gada-pratama.svg',
-        alt: 'Ilustrasi sertifikat pelatihan Gada Pratama',
-        description: 'Bukti kompetensi dasar personel security untuk menjalankan tugas lapangan.',
-        tags: ['Gada Pratama', 'Pelatihan', 'Security'],
-    },
-    {
-        title: 'Sertifikat Keselamatan dan Kesehatan Kerja',
-        issuer: 'Standar Operasional',
-        image: '/storage/certifications/k3-certificate.svg',
-        alt: 'Ilustrasi sertifikat K3 umum',
-        description: 'Komitmen terhadap prosedur kerja aman dalam layanan operasional pengamanan.',
-        tags: ['K3', 'SOP', 'Safety'],
-    },
-];
-
-const staticGalleryItems = [
-    {
-        title: 'Briefing Personel',
-        category: 'Operasional',
-        year: '2026',
-        image: '/storage/galleries/security-briefing.jpg',
-        alt: 'Tim security berdiri di area kendaraan patroli sebelum bertugas',
-        caption: 'Koordinasi personel sebelum menjalankan shift dan pembagian titik penjagaan.',
-    },
-    {
-        title: 'Patroli Area',
-        category: 'Monitoring',
-        year: '2026',
-        image: '/storage/galleries/area-patrol.jpg',
-        alt: 'Dua petugas security melakukan patroli di area indoor',
-        caption: 'Patroli rutin untuk memastikan area publik dan operasional tetap aman.',
-    },
-    {
-        title: 'Akses Masuk',
-        category: 'Kontrol Akses',
-        year: '2026',
-        image: '/storage/galleries/access-control.jpg',
-        alt: 'Petugas keamanan berjaga di pintu masuk gedung',
-        caption: 'Pengawasan akses masuk untuk tamu, karyawan, dan vendor di area klien.',
-    },
-    {
-        title: 'Pengamanan Event',
-        category: 'Event',
-        year: '2026',
-        image: '/storage/galleries/event-security.jpg',
-        alt: 'Petugas security mengawasi kerumunan acara luar ruang',
-        caption: 'Pengamanan kegiatan publik dengan pengawasan crowd flow dan titik rawan.',
-    },
-];
-
-const galleryItems = computed(() => (props.publicGalleries.length ? props.publicGalleries : staticGalleryItems));
+    return values.length ? values : defaultValues;
+});
 
 let revealObserver = null;
 
@@ -182,13 +150,13 @@ const getSanitizedContactData = () => ({
 
 const buildContactWhatsappUrl = (payload) => {
     const message = [
-        'Halo PT Secure Guard Indonesia, saya ingin konsultasi kebutuhan keamanan.',
+        `Halo ${companyInfo.value.name}, saya ingin konsultasi kebutuhan keamanan.`,
         `Nama: ${payload.name}`,
         `Email: ${payload.email}`,
         `Pesan: ${payload.message}`,
     ].join('\n');
 
-    return `https://wa.me/6281234567890?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${companyInfo.value.whatsapp_number}?text=${encodeURIComponent(message)}`;
 };
 
 const scrollToSection = (sectionId) => {
@@ -255,18 +223,19 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <Head title="PT Secure Guard Indonesia" />
+    <Head :title="seo.title" />
 
-    <MainLayout>
+    <MainLayout :company="companyInfo">
         <section
             id="home"
             class="relative flex min-h-[calc(100svh-8.5rem)] scroll-mt-24 overflow-hidden bg-brand-ink text-white"
         >
             <img
-                src="/images/security-guard-entrance.jpg"
+                :src="heroContent.image"
                 alt="Petugas keamanan profesional berjaga di pintu masuk gedung"
                 class="absolute inset-0 h-full w-full object-cover"
                 loading="eager"
+                decoding="async"
             />
             <div class="absolute inset-0 bg-gradient-to-r from-brand-ink via-brand-ink/80 to-brand-ink/25" />
             <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-brand-ink/70 to-transparent" />
@@ -274,33 +243,32 @@ onBeforeUnmount(() => {
             <div class="container relative z-10 flex items-center py-10 md:py-14">
                 <div class="max-w-4xl">
                     <div class="reveal-on-scroll flex flex-wrap gap-3" data-reveal>
-                        <BadgeLabel>Security Profesional</BadgeLabel>
-                        <BadgeLabel tone="dark">Siap Operasional</BadgeLabel>
+                        <BadgeLabel v-if="heroContent.eyebrow">{{ heroContent.eyebrow }}</BadgeLabel>
+                        <BadgeLabel v-if="heroContent.badge" tone="dark">{{ heroContent.badge }}</BadgeLabel>
                     </div>
 
-                    <h1 class="reveal-on-scroll mt-6 max-w-4xl text-display-md text-white md:text-display-lg" data-reveal>
-                        PT Secure Guard Indonesia
+                    <h1 class="reveal-on-scroll mt-6 max-w-4xl text-display-sm text-white sm:text-display-md md:text-display-lg" data-reveal>
+                        {{ heroContent.title }}
                     </h1>
 
                     <p class="reveal-on-scroll mt-5 max-w-2xl text-body-lg text-white/80" data-reveal>
-                        Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan
-                        personel sigap, terlatih, dan mudah dikoordinasikan.
+                        {{ heroContent.subtitle }}
                     </p>
 
                     <div class="reveal-on-scroll mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap" data-reveal>
-                        <BaseButton :href="whatsappUrl" size="lg" variant="primary">
-                            Hubungi Kami
+                        <BaseButton :href="heroContent.primary_cta_url" size="lg" variant="primary" class="w-full sm:w-auto">
+                            {{ heroContent.primary_cta_label }}
                         </BaseButton>
-                        <BaseButton :href="whatsappUrl" size="lg" variant="secondary">
-                            Konsultasi Sekarang
+                        <BaseButton :href="heroContent.secondary_cta_url" size="lg" variant="secondary" class="w-full sm:w-auto">
+                            {{ heroContent.secondary_cta_label }}
                         </BaseButton>
-                        <BaseButton size="lg" variant="outline" @click="scrollToSection('layanan')">
+                        <BaseButton size="lg" variant="outline" class="w-full sm:w-auto" @click="scrollToSection('layanan')">
                             Lihat Layanan
                         </BaseButton>
                     </div>
 
                     <p class="reveal-on-scroll mt-4 text-body-sm text-white/70" data-reveal>
-                        Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.
+                        {{ heroContent.note }}
                     </p>
 
                     <div class="reveal-on-scroll mt-7 hidden max-w-3xl grid-cols-3 gap-3 sm:grid" data-reveal>
@@ -321,14 +289,14 @@ onBeforeUnmount(() => {
             <div class="grid gap-12 lg:grid-cols-[1fr_0.86fr] lg:items-center">
                 <div class="reveal-on-scroll" data-reveal>
                     <SectionHeading
-                        eyebrow="Tentang Kami"
-                        title="Mitra keamanan yang menjaga ritme operasional tetap tenang"
-                        subtitle="PT Secure Guard Indonesia membantu perusahaan mengelola keamanan dengan personel yang terlatih, prosedur kerja yang jelas, dan komunikasi yang mudah diikuti."
+                        :eyebrow="aboutContent.eyebrow"
+                        :title="aboutContent.title"
+                        :subtitle="aboutContent.subtitle"
                     />
 
                     <div class="mt-8 grid gap-3">
                         <div
-                            v-for="item in advantages"
+                            v-for="item in aboutAdvantages"
                             :key="item"
                             class="flex gap-3 rounded-lg border border-brand-line bg-white p-4 shadow-sm"
                         >
@@ -345,15 +313,16 @@ onBeforeUnmount(() => {
                 <div class="reveal-on-scroll" data-reveal>
                     <div class="overflow-hidden rounded-lg border border-brand-line bg-brand-muted shadow-lift">
                         <img
-                            src="/images/security-guard-entrance.jpg"
+                            :src="aboutContent.image"
                             alt="Petugas keamanan sedang berjaga di area gedung"
                             class="aspect-[4/3] w-full object-cover"
                             loading="lazy"
+                            decoding="async"
                         />
                     </div>
 
                     <div class="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-                        <BaseCard v-for="item in values" :key="item.title" tone="soft">
+                        <BaseCard v-for="item in aboutValues" :key="item.title" tone="soft">
                             <h3 class="text-lg font-bold text-brand-ink">{{ item.title }}</h3>
                             <p class="mt-2 text-body-sm text-stone-700">{{ item.description }}</p>
                         </BaseCard>
@@ -371,19 +340,31 @@ onBeforeUnmount(() => {
                         subtitle="Pilih model pengamanan yang sesuai dengan karakter lokasi, jumlah personel, jam operasional, dan tingkat risiko bisnis."
                     />
 
-                    <BaseButton :href="whatsappUrl" variant="outline" class="w-fit">
+                    <BaseButton :href="whatsappUrl" variant="outline" class="w-full sm:w-fit">
                         Diskusi Kebutuhan
                     </BaseButton>
                 </div>
 
                 <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     <ServiceCard
-                        v-for="service in serviceItems"
-                        :key="service.title"
+                        v-for="(service, index) in serviceItems"
+                        :key="service.id || service.title"
                         :service="service"
                         class="reveal-on-scroll"
+                        :style="{ transitionDelay: `${Math.min(index, 5) * 70}ms` }"
                         data-reveal
                     />
+                </div>
+
+                <div
+                    v-if="!serviceItems.length"
+                    class="reveal-on-scroll rounded-lg border border-dashed border-brand-line bg-brand-soft p-6 text-center"
+                    data-reveal
+                >
+                    <h3 class="text-lg font-bold text-brand-ink">Layanan belum tersedia</h3>
+                    <p class="mt-2 text-body-sm text-stone-700">
+                        Data layanan akan tampil otomatis setelah admin menambahkannya dari dashboard.
+                    </p>
                 </div>
             </div>
         </SectionContainer>
@@ -398,12 +379,24 @@ onBeforeUnmount(() => {
 
                 <div class="grid gap-5 lg:grid-cols-3">
                     <CertificationCard
-                        v-for="certification in certificationItems"
-                        :key="certification.title"
+                        v-for="(certification, index) in certificationItems"
+                        :key="certification.id || certification.title"
                         :certification="certification"
                         class="reveal-on-scroll"
+                        :style="{ transitionDelay: `${Math.min(index, 5) * 70}ms` }"
                         data-reveal
                     />
+                </div>
+
+                <div
+                    v-if="!certificationItems.length"
+                    class="reveal-on-scroll rounded-lg border border-dashed border-brand-line bg-white p-6 text-center"
+                    data-reveal
+                >
+                    <h3 class="text-lg font-bold text-brand-ink">Sertifikasi belum tersedia</h3>
+                    <p class="mt-2 text-body-sm text-stone-700">
+                        Data sertifikasi akan tampil otomatis setelah admin mengunggah dokumen dari dashboard.
+                    </p>
                 </div>
             </div>
         </SectionContainer>
@@ -417,19 +410,31 @@ onBeforeUnmount(() => {
                         subtitle="Cuplikan aktivitas tim dalam menjaga area kerja, akses masuk, patroli, dan kegiatan klien."
                     />
 
-                    <BaseButton :href="whatsappUrl" variant="outline" class="w-fit">
+                    <BaseButton :href="whatsappUrl" variant="outline" class="w-full sm:w-fit">
                         Minta Portofolio
                     </BaseButton>
                 </div>
 
                 <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     <GalleryCard
-                        v-for="item in galleryItems"
-                        :key="item.title"
+                        v-for="(item, index) in galleryItems"
+                        :key="item.id || item.title"
                         :item="item"
                         class="reveal-on-scroll"
+                        :style="{ transitionDelay: `${Math.min(index, 7) * 55}ms` }"
                         data-reveal
                     />
+                </div>
+
+                <div
+                    v-if="!galleryItems.length"
+                    class="reveal-on-scroll rounded-lg border border-dashed border-brand-line bg-brand-soft p-6 text-center"
+                    data-reveal
+                >
+                    <h3 class="text-lg font-bold text-brand-ink">Galeri belum tersedia</h3>
+                    <p class="mt-2 text-body-sm text-stone-700">
+                        Dokumentasi kegiatan akan tampil otomatis setelah admin menambahkan gambar dari dashboard.
+                    </p>
                 </div>
             </div>
         </SectionContainer>
@@ -438,43 +443,49 @@ onBeforeUnmount(() => {
             <div class="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <div class="reveal-on-scroll" data-reveal>
                     <SectionHeading
-                        eyebrow="Contact"
+                        eyebrow="Kontak"
                         title="Mulai konsultasi keamanan"
                         subtitle="Tim kami siap membantu menyesuaikan kebutuhan pengamanan perusahaan, kawasan, atau event."
                         inverse
                     />
 
-                    <div class="mt-7 grid gap-4 sm:grid-cols-2">
+                    <div class="mt-7 grid gap-4 sm:grid-cols-3">
                         <div class="rounded-lg border border-white/10 bg-white/10 p-5">
                             <p class="text-body-sm font-bold uppercase text-brand-primary">WhatsApp</p>
-                            <p class="mt-2 text-body-md text-white">+62 812 3456 7890</p>
+                            <p class="mt-2 text-body-md text-white">{{ companyInfo.whatsapp }}</p>
                             <p class="mt-2 text-body-sm text-white/70">Respon awal untuk konsultasi kebutuhan personel.</p>
                         </div>
 
                         <div class="rounded-lg border border-white/10 bg-white/10 p-5">
                             <p class="text-body-sm font-bold uppercase text-brand-primary">Email</p>
-                            <p class="mt-2 text-body-md text-white">hello@secureguard.test</p>
+                            <p class="mt-2 text-body-md text-white">{{ companyInfo.email }}</p>
                             <p class="mt-2 text-body-sm text-white/70">Kirim detail kebutuhan untuk penawaran tertulis.</p>
+                        </div>
+
+                        <div class="rounded-lg border border-white/10 bg-white/10 p-5">
+                            <p class="text-body-sm font-bold uppercase text-brand-primary">Lokasi</p>
+                            <p class="mt-2 text-body-md text-white">{{ companyInfo.location }}</p>
+                            <p class="mt-2 text-body-sm text-white/70">Acuan koordinasi awal kebutuhan pengamanan.</p>
                         </div>
                     </div>
 
                     <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-                        <BaseButton :href="whatsappUrl" variant="primary" size="lg">
+                        <BaseButton :href="whatsappUrl" variant="primary" size="lg" class="w-full sm:w-auto">
                             Chat Langsung
                         </BaseButton>
-                        <BaseButton href="mailto:hello@secureguard.test" variant="outline" size="lg">
+                        <BaseButton :href="emailUrl" variant="outline" size="lg" class="w-full sm:w-auto">
                             Email Kami
                         </BaseButton>
                     </div>
                 </div>
 
                 <form
-                    class="reveal-on-scroll rounded-lg border border-white/10 bg-white p-6 shadow-lift"
+                    class="reveal-on-scroll rounded-lg border border-white/10 bg-white p-5 shadow-lift sm:p-6"
                     data-reveal
                     @submit.prevent="submitContact"
                 >
                     <div>
-                        <p class="text-body-sm font-bold uppercase text-brand-accent">Form Contact</p>
+                        <p class="text-body-sm font-bold uppercase text-brand-accent">Form Kontak</p>
                         <h2 class="mt-2 text-2xl font-bold text-brand-ink">Ceritakan kebutuhan Anda</h2>
                         <p class="mt-2 text-body-sm text-stone-600">
                             Pesan akan tersimpan sebagai lead dan diteruskan ke WhatsApp setelah berhasil dikirim.

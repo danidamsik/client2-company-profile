@@ -1,15 +1,35 @@
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
     inverse: {
         type: Boolean,
         default: false,
     },
+    logoUrl: {
+        type: String,
+        default: '',
+    },
+    name: {
+        type: String,
+        default: 'PT Secure Guard',
+    },
+    subtitle: {
+        type: String,
+        default: 'Indonesia',
+    },
 });
+
+const displayName = computed(() => props.name || 'PT Secure Guard');
+const displaySubtitle = computed(() => props.subtitle || 'Indonesia');
 </script>
 
 <template>
     <div class="flex items-center gap-3">
-        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-primary text-brand-ink">
+        <span v-if="logoUrl" class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-brand-line bg-white">
+            <img :src="logoUrl" :alt="displayName" class="h-full w-full object-contain p-1" />
+        </span>
+        <span v-else class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-primary text-brand-ink">
             <svg class="h-7 w-7" viewBox="0 0 32 32" fill="none" aria-hidden="true">
                 <path
                     d="M16 3.5 26 7v7.25c0 6.35-4.05 11.85-10 14.25-5.95-2.4-10-7.9-10-14.25V7l10-3.5Z"
@@ -27,11 +47,11 @@ defineProps({
         </span>
 
         <span class="min-w-0">
-            <span class="block text-body-md font-bold leading-5" :class="inverse ? 'text-white' : 'text-brand-ink'">
-                PT Secure Guard
+            <span class="block max-w-[12rem] truncate text-body-md font-bold leading-5" :class="inverse ? 'text-white' : 'text-brand-ink'">
+                {{ displayName }}
             </span>
-            <span class="block text-body-sm leading-5" :class="inverse ? 'text-white/70' : 'text-stone-600'">
-                Indonesia
+            <span class="block max-w-[12rem] truncate text-body-sm leading-5" :class="inverse ? 'text-white/70' : 'text-stone-600'">
+                {{ displaySubtitle }}
             </span>
         </span>
     </div>

@@ -1,15 +1,17 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutSectionController;
 use App\Http\Controllers\Admin\CertificationController;
+use App\Http\Controllers\Admin\CompanyInformationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
+use App\Http\Controllers\Admin\HeroSectionController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Gallery;
+use App\Http\Controllers\PublicPageController;
+use App\Services\PublicContentService;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Str;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,24 +24,22 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'publicGalleries' => Gallery::query()
-            ->latest()
-            ->take(8)
-            ->get(['id', 'image', 'caption', 'created_at'])
-            ->map(fn (Gallery $gallery): array => [
-                'title' => Str::limit($gallery->caption, 36),
-                'category' => 'Dokumentasi',
-                'year' => $gallery->created_at?->format('Y') ?? now()->format('Y'),
-                'image' => Str::startsWith($gallery->image, ['http://', 'https://', '/'])
-                    ? $gallery->image
-                    : "/storage/{$gallery->image}",
-                'alt' => $gallery->caption,
-                'caption' => $gallery->caption,
-            ]),
-    ]);
-});
+Route::get('/', PublicPageController::class)->name('home');
+
+Route::get('/robots.txt', function () {
+    return response(implode("\n", [
+        'User-agent: *',
+        'Allow: /',
+        'Sitemap: '.url('/sitemap.xml'),
+        '',
+    ]), 200, ['Content-Type' => 'text/plain']);
+})->name('robots');
+
+Route::get('/sitemap.xml', function (PublicContentService $publicContent) {
+    return response()->view('sitemap', [
+        'entries' => $publicContent->sitemapEntries(),
+    ], 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
 
 Route::post('/contacts', [ContactController::class, 'store'])
     ->middleware('throttle:6,1')
@@ -49,6 +49,12 @@ Route::middleware(['auth', 'verified'])
     ->prefix('dashboard')
     ->group(function () {
         Route::get('/', DashboardController::class)->name('dashboard');
+        Route::get('/hero-sections', [HeroSectionController::class, 'index'])->name('admin.hero-sections.index');
+        Route::put('/hero-sections', [HeroSectionController::class, 'update'])->name('admin.hero-sections.update');
+        Route::get('/about-sections', [AboutSectionController::class, 'index'])->name('admin.about-sections.index');
+        Route::put('/about-sections', [AboutSectionController::class, 'update'])->name('admin.about-sections.update');
+        Route::get('/company-information', [CompanyInformationController::class, 'index'])->name('admin.company-information.index');
+        Route::put('/company-information', [CompanyInformationController::class, 'update'])->name('admin.company-information.update');
         Route::get('/services', [ServiceController::class, 'index'])->name('admin.services.index');
         Route::post('/services', [ServiceController::class, 'store'])->name('admin.services.store');
         Route::put('/services/{service}', [ServiceController::class, 'update'])->name('admin.services.update');

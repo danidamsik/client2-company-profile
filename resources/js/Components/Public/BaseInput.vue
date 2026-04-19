@@ -45,7 +45,7 @@ const props = defineProps({
 defineEmits(['update:modelValue']);
 
 const inputClasses =
-    'focus-ring mt-2 block w-full rounded-lg border-brand-line bg-white px-4 py-3 text-body-sm text-brand-ink placeholder:text-stone-400 shadow-sm transition duration-200 focus:border-brand-primary';
+    'focus-ring mt-2 block w-full rounded-lg border-brand-line bg-white px-4 py-3 text-body-sm text-brand-ink placeholder:text-stone-400 shadow-sm transition duration-200 hover:border-brand-primary focus:border-brand-primary';
 </script>
 
 <template>

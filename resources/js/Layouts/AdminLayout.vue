@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import BrandLogo from '@/Components/Public/BrandLogo.vue';
 import AdminConfirmDialog from '@/Components/Admin/AdminConfirmDialog.vue';
@@ -10,14 +10,11 @@ defineProps({
         type: String,
         default: 'Dashboard',
     },
-    description: {
-        type: String,
-        default: '',
-    },
 });
 
 const page = usePage();
 const showingSidebar = ref(false);
+const sidebarHidden = ref(false);
 
 const navItems = [
     {
@@ -25,6 +22,24 @@ const navItems = [
         href: route('dashboard'),
         active: 'dashboard',
         icon: 'dashboard',
+    },
+    {
+        label: 'Hero Section',
+        href: route('admin.hero-sections.index'),
+        active: 'admin.hero-sections.*',
+        icon: 'hero',
+    },
+    {
+        label: 'Tentang Kami',
+        href: route('admin.about-sections.index'),
+        active: 'admin.about-sections.*',
+        icon: 'about',
+    },
+    {
+        label: 'Informasi Company',
+        href: route('admin.company-information.index'),
+        active: 'admin.company-information.*',
+        icon: 'company',
     },
     {
         label: 'Layanan',
@@ -58,6 +73,17 @@ const isActive = (item) => route().current(item.active);
 const closeSidebar = () => {
     showingSidebar.value = false;
 };
+const toggleSidebarVisibility = () => {
+    sidebarHidden.value = !sidebarHidden.value;
+};
+
+onMounted(() => {
+    sidebarHidden.value = window.localStorage.getItem('adminSidebarHidden') === 'true';
+});
+
+watch(sidebarHidden, (value) => {
+    window.localStorage.setItem('adminSidebarHidden', value ? 'true' : 'false');
+});
 </script>
 
 <template>
@@ -73,8 +99,11 @@ const closeSidebar = () => {
         />
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex w-72 transform flex-col border-r border-brand-line bg-white transition duration-200 lg:translate-x-0"
-            :class="showingSidebar ? 'translate-x-0' : '-translate-x-full'"
+            class="fixed inset-y-0 left-0 z-50 flex w-72 transform flex-col border-r border-brand-line bg-white transition duration-200"
+            :class="[
+                showingSidebar ? 'translate-x-0' : '-translate-x-full',
+                sidebarHidden ? 'lg:-translate-x-full' : 'lg:translate-x-0',
+            ]"
         >
             <div class="flex h-20 items-center justify-between border-b border-brand-line px-5">
                 <Link :href="route('dashboard')" @click="closeSidebar">
@@ -89,6 +118,18 @@ const closeSidebar = () => {
                 >
                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                         <path d="m6 6 8 8M14 6l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                </button>
+
+                <button
+                    type="button"
+                    class="focus-ring hidden h-10 w-10 items-center justify-center rounded-md text-stone-500 transition hover:bg-brand-soft hover:text-brand-ink lg:flex"
+                    aria-label="Sembunyikan sidebar"
+                    title="Sembunyikan sidebar"
+                    @click="toggleSidebarVisibility"
+                >
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                        <path d="M13 5 8 10l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </button>
             </div>
@@ -107,6 +148,18 @@ const closeSidebar = () => {
                     <span class="flex h-8 w-8 items-center justify-center rounded-md" :class="isActive(item) ? 'bg-white/55' : 'bg-white'">
                         <svg v-if="item.icon === 'dashboard'" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                             <path d="M4 5.5h5v5H4v-5ZM11 5.5h5v3h-5v-3ZM11 10.5h5v4h-5v-4ZM4 12.5h5v2H4v-2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                        </svg>
+                        <svg v-else-if="item.icon === 'hero'" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M4 5h12v10H4V5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+                            <path d="M6.5 8h5M6.5 11h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                        </svg>
+                        <svg v-else-if="item.icon === 'about'" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M10 4.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4Z" stroke="currentColor" stroke-width="1.8" />
+                            <path d="M5.5 15c.75-2.3 2.35-3.5 4.5-3.5s3.75 1.2 4.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                        </svg>
+                        <svg v-else-if="item.icon === 'company'" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M4.5 16V5.5A1.5 1.5 0 0 1 6 4h8a1.5 1.5 0 0 1 1.5 1.5V16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                            <path d="M3.5 16h13M7.5 7h1M11.5 7h1M7.5 10h1M11.5 10h1M8 16v-3h4v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
                         <svg v-else-if="item.icon === 'services'" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
                             <path d="M10 3.5 15.5 6v4.5c0 3.55-2.2 5.8-5.5 7-3.3-1.2-5.5-3.45-5.5-7V6L10 3.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
@@ -137,7 +190,7 @@ const closeSidebar = () => {
             </div>
         </aside>
 
-        <div class="lg:pl-72">
+        <div class="transition-[padding] duration-200" :class="sidebarHidden ? 'lg:pl-0' : 'lg:pl-72'">
             <header class="sticky top-0 z-30 border-b border-brand-line bg-white/95 backdrop-blur">
                 <div class="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
                     <button
@@ -151,11 +204,24 @@ const closeSidebar = () => {
                         </svg>
                     </button>
 
+                    <button
+                        type="button"
+                        class="focus-ring hidden h-11 w-11 items-center justify-center rounded-lg border border-brand-line bg-white text-brand-ink transition hover:border-brand-primary hover:bg-brand-soft lg:flex"
+                        :aria-label="sidebarHidden ? 'Tampilkan sidebar' : 'Sembunyikan sidebar'"
+                        :title="sidebarHidden ? 'Tampilkan sidebar' : 'Sembunyikan sidebar'"
+                        @click="toggleSidebarVisibility"
+                    >
+                        <svg v-if="sidebarHidden" class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M4 6h12M4 10h12M4 14h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        <svg v-else class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                            <path d="M13 5 8 10l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+
                     <div class="min-w-0 flex-1">
                         <slot name="header">
-                            <p class="text-body-sm font-semibold uppercase text-brand-accent">Admin Panel</p>
-                            <h1 class="mt-1 truncate text-2xl font-bold text-brand-ink">{{ title }}</h1>
-                            <p v-if="description" class="mt-1 hidden text-body-sm text-stone-600 sm:block">{{ description }}</p>
+                            <h1 class="truncate text-2xl font-bold text-brand-ink">{{ title }}</h1>
                         </slot>
                     </div>
 

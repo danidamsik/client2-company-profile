@@ -4,13 +4,27 @@ import { onBeforeUnmount, onMounted, ref } from 'vue';
 import BaseButton from '@/Components/Public/BaseButton.vue';
 import BrandLogo from '@/Components/Public/BrandLogo.vue';
 
+const props = defineProps({
+    company: {
+        type: Object,
+        default: () => ({
+            logo: '',
+            name: 'PT Secure Guard Indonesia',
+            email: 'hello@secureguard.test',
+            whatsapp: '+62 812 3456 7890',
+            whatsapp_url: 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.',
+            location: 'Jakarta, Indonesia',
+        }),
+    },
+});
+
 const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'tentang', label: 'Tentang' },
     { id: 'layanan', label: 'Layanan' },
     { id: 'sertifikasi', label: 'Sertifikasi' },
     { id: 'galeri', label: 'Galeri' },
-    { id: 'contact', label: 'Contact' },
+    { id: 'contact', label: 'Kontak' },
 ];
 
 const activeSection = ref('home');
@@ -68,8 +82,8 @@ onBeforeUnmount(() => {
             :class="isScrolled ? 'border-brand-line bg-white/95 shadow-nav backdrop-blur' : 'border-transparent bg-white'"
         >
             <nav class="container flex h-20 items-center justify-between gap-4" aria-label="Navigasi utama">
-                <button type="button" class="focus-ring rounded-lg" @click="scrollToSection('home')">
-                    <BrandLogo />
+                <button type="button" class="focus-ring rounded-lg" aria-label="Kembali ke bagian utama" @click="scrollToSection('home')">
+                    <BrandLogo :logo-url="props.company.logo" :name="props.company.name" :subtitle="props.company.location" />
                 </button>
 
                 <div class="hidden items-center gap-1 lg:flex">
@@ -83,6 +97,7 @@ onBeforeUnmount(() => {
                                 ? 'bg-brand-primary text-brand-ink'
                                 : 'text-stone-700 hover:bg-brand-soft hover:text-brand-ink'
                         "
+                        :aria-current="activeSection === item.id ? 'page' : undefined"
                         @click="scrollToSection(item.id)"
                     >
                         {{ item.label }}
@@ -140,6 +155,7 @@ onBeforeUnmount(() => {
                                 ? 'bg-brand-primary text-brand-ink'
                                 : 'text-stone-700 hover:bg-brand-soft hover:text-brand-ink'
                         "
+                        :aria-current="activeSection === item.id ? 'page' : undefined"
                         @click="scrollToSection(item.id)"
                     >
                         {{ item.label }}
@@ -178,7 +194,7 @@ onBeforeUnmount(() => {
             <div class="container py-12">
                 <div class="grid gap-10 lg:grid-cols-[1.1fr_0.7fr_0.7fr]">
                     <div>
-                        <BrandLogo inverse />
+                        <BrandLogo inverse :logo-url="props.company.logo" :name="props.company.name" :subtitle="props.company.location" />
                         <p class="mt-5 max-w-xl text-body-md text-white/75">
                             Solusi keamanan profesional untuk perusahaan, kawasan, dan event dengan layanan yang sigap
                             dan mudah dihubungi.
@@ -193,9 +209,9 @@ onBeforeUnmount(() => {
                     <div>
                         <h2 class="text-body-md font-bold">Kontak</h2>
                         <div class="mt-4 space-y-3 text-body-sm text-white/75">
-                            <p>Email: hello@secureguard.test</p>
-                            <p>WhatsApp: +62 812 3456 7890</p>
-                            <p>Jakarta, Indonesia</p>
+                            <p>Email: {{ props.company.email }}</p>
+                            <p>WhatsApp: {{ props.company.whatsapp }}</p>
+                            <p>{{ props.company.location }}</p>
                         </div>
                     </div>
 
@@ -216,7 +232,7 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div class="mt-10 border-t border-white/10 pt-6 text-body-sm text-white/60">
-                    Copyright 2026 PT Secure Guard Indonesia. All rights reserved.
+                    Copyright 2026 {{ props.company.name }}. Hak cipta dilindungi.
                 </div>
             </div>
         </footer>

@@ -30,8 +30,8 @@ const toneClasses = computed(() => ({
 <template>
     <component
         :is="as"
-        class="rounded-lg border shadow-card transition duration-200"
-        :class="[toneClasses, padded ? 'p-6' : '', hover ? 'hover:-translate-y-1 hover:shadow-lift' : '']"
+        class="rounded-lg border shadow-card transition duration-300"
+        :class="[toneClasses, padded ? 'p-6' : '', hover ? 'hover:-translate-y-1 hover:border-brand-primary hover:shadow-lift' : '']"
     >
         <slot />
     </component>

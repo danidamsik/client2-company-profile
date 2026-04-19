@@ -31,62 +31,72 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Masuk Admin" />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div class="mb-7">
+            <p class="text-body-sm font-bold uppercase text-brand-accent">Akses Admin</p>
+            <h1 class="mt-2 text-display-sm text-brand-ink">Masuk ke dashboard</h1>
+            <p class="mt-3 text-body-sm text-stone-600">
+                Gunakan akun admin untuk mengelola layanan, sertifikasi, galeri, dan pesan calon klien.
+            </p>
+        </div>
+
+        <div v-if="status" class="mb-5 rounded-lg border border-green-200 bg-green-50 p-4 text-body-sm font-medium text-green-800">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form class="grid gap-5" @submit.prevent="submit">
             <div>
                 <InputLabel for="email" value="Email" />
 
                 <TextInput
                     id="email"
                     type="email"
-                    class="mt-1 block w-full"
+                    class="mt-2 block w-full"
                     v-model="form.email"
                     required
                     autofocus
                     autocomplete="username"
+                    placeholder="admin@email.com"
                 />
 
                 <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
-            <div class="mt-4">
+            <div>
                 <InputLabel for="password" value="Password" />
 
                 <TextInput
                     id="password"
                     type="password"
-                    class="mt-1 block w-full"
+                    class="mt-2 block w-full"
                     v-model="form.password"
                     required
                     autocomplete="current-password"
+                    placeholder="Masukkan password"
                 />
 
                 <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
-            <div class="block mt-4">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
+                    <span class="ms-2 text-body-sm text-stone-700">Ingat saya</span>
                 </label>
-            </div>
 
-            <div class="flex items-center justify-end mt-4">
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
-                    class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="focus-ring rounded-md text-body-sm font-semibold text-brand-accent transition hover:text-brand-accentDark"
                 >
-                    Forgot your password?
+                    Lupa password?
                 </Link>
+            </div>
 
-                <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+            <div>
+                <PrimaryButton class="w-full" :disabled="form.processing">
+                    {{ form.processing ? 'Memproses...' : 'Masuk' }}
                 </PrimaryButton>
             </div>
         </form>

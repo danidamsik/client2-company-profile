@@ -36,7 +36,6 @@ class DashboardController extends Controller
                     'message' => Str::limit($contact->message, 120),
                     'created_at' => $contact->created_at?->diffForHumans(),
                 ]),
-            'contentFlow' => $this->contentFlow(),
         ]);
     }
 
@@ -74,27 +73,6 @@ class DashboardController extends Controller
                 'description' => 'Pesan calon klien dari form publik.',
                 'href' => null,
                 'tone' => 'ink',
-            ],
-        ];
-    }
-
-    /**
-     * @return array<int, array<string, string>>
-     */
-    private function contentFlow(): array
-    {
-        return [
-            [
-                'title' => 'Siapkan konten',
-                'description' => 'Admin menambah atau memperbarui data melalui modal di setiap modul.',
-            ],
-            [
-                'title' => 'Review ringkas',
-                'description' => 'Cek judul, gambar, dan deskripsi sebelum konten digunakan di halaman publik.',
-            ],
-            [
-                'title' => 'Publish/update',
-                'description' => 'Perubahan konten siap dihubungkan ke landing page dinamis pada fase lanjutan.',
             ],
         ];
     }

@@ -36,7 +36,10 @@ const alignClasses = computed(() => ({
             {{ eyebrow }}
         </p>
 
-        <h2 class="break-words text-display-sm md:text-display-md" :class="inverse ? 'text-white' : 'text-brand-ink'">
+        <h2
+            class="break-words text-[1.85rem] font-bold leading-10 md:text-display-md"
+            :class="inverse ? 'text-white' : 'text-brand-ink'"
+        >
             {{ title }}
         </h2>
 

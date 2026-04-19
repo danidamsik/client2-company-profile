@@ -15,10 +15,6 @@ defineProps({
         type: Array,
         default: () => [],
     },
-    contentFlow: {
-        type: Array,
-        default: () => [],
-    },
 });
 
 const statTone = (tone) => ({
@@ -32,10 +28,7 @@ const statTone = (tone) => ({
 <template>
     <Head title="Dashboard Admin" />
 
-    <AdminLayout
-        title="Dashboard Admin"
-        description="Pantau ringkasan konten publik dan pesan calon klien dari satu tempat."
-    >
+    <AdminLayout title="Dashboard Admin">
         <div class="space-y-6">
             <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <component
@@ -60,28 +53,7 @@ const statTone = (tone) => ({
                 </component>
             </section>
 
-            <section class="grid gap-6 xl:grid-cols-[1fr_0.72fr]">
-                <div class="rounded-lg border border-brand-line bg-white shadow-sm">
-                    <div class="border-b border-brand-line p-5">
-                        <p class="text-body-sm font-semibold uppercase text-brand-accent">Konten</p>
-                        <h2 class="mt-1 text-xl font-bold text-brand-ink">Alur publish / update</h2>
-                    </div>
-
-                    <div class="grid gap-4 p-5 md:grid-cols-3">
-                        <div
-                            v-for="(step, index) in contentFlow"
-                            :key="step.title"
-                            class="rounded-lg border border-brand-line bg-brand-muted p-5"
-                        >
-                            <span class="flex h-9 w-9 items-center justify-center rounded-md bg-brand-primary text-body-sm font-bold text-brand-ink">
-                                {{ index + 1 }}
-                            </span>
-                            <h3 class="mt-4 text-lg font-bold text-brand-ink">{{ step.title }}</h3>
-                            <p class="mt-2 text-body-sm text-stone-600">{{ step.description }}</p>
-                        </div>
-                    </div>
-                </div>
-
+            <section>
                 <div class="rounded-lg border border-brand-line bg-white shadow-sm">
                     <div class="border-b border-brand-line p-5">
                         <p class="text-body-sm font-semibold uppercase text-brand-accent">Lead Contact</p>
@@ -110,33 +82,6 @@ const statTone = (tone) => ({
                         </div>
                         <h3 class="mt-4 text-lg font-bold text-brand-ink">Belum ada lead</h3>
                         <p class="mt-2 text-body-sm text-stone-600">Pesan dari form publik akan muncul di sini.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="rounded-lg border border-brand-line bg-brand-ink p-5 text-white shadow-sm">
-                <div class="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-center">
-                    <div>
-                        <p class="text-body-sm font-semibold uppercase text-brand-primary">Kelola Konten</p>
-                        <h2 class="mt-1 text-2xl font-bold">Mulai dari modul yang paling sering berubah</h2>
-                        <p class="mt-2 max-w-3xl text-body-sm text-white/70">
-                            Struktur halaman CRUD sudah tersedia untuk layanan, sertifikasi, dan galeri. Form create/update dibuka melalui modal agar alur admin konsisten.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col gap-3 sm:flex-row">
-                        <Link
-                            :href="route('admin.services.index')"
-                            class="focus-ring inline-flex h-11 items-center justify-center rounded-lg border border-brand-primary bg-brand-primary px-5 text-body-sm font-semibold text-brand-ink transition hover:border-brand-primaryDark hover:bg-brand-primaryDark"
-                        >
-                            Layanan
-                        </Link>
-                        <Link
-                            :href="route('admin.galleries.index')"
-                            class="focus-ring inline-flex h-11 items-center justify-center rounded-lg border border-white/20 bg-white/10 px-5 text-body-sm font-semibold text-white transition hover:bg-white/15"
-                        >
-                            Galeri
-                        </Link>
                     </div>
                 </div>
             </section>
