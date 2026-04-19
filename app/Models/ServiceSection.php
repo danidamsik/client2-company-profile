@@ -5,19 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Service extends Model
+class ServiceSection extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'eyebrow',
         'title',
-        'description',
-        'category',
-        'icon',
-        'points',
-    ];
-
-    protected $casts = [
-        'points' => 'array',
+        'subtitle',
+        'cta_label',
+        'cta_url',
     ];
 }

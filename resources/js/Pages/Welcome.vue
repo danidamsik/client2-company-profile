@@ -34,6 +34,10 @@ const props = defineProps({
         type: Object,
         default: null,
     },
+    publicServiceSection: {
+        type: Object,
+        default: null,
+    },
     publicCompanyInformation: {
         type: Object,
         default: null,
@@ -133,6 +137,13 @@ const aboutValues = computed(() => {
 
     return values.length ? values : defaultValues;
 });
+const serviceSectionContent = computed(() => ({
+    eyebrow: props.publicServiceSection?.eyebrow || 'Layanan',
+    title: props.publicServiceSection?.title || 'Pengamanan untuk kebutuhan operasional',
+    subtitle: props.publicServiceSection?.subtitle || 'Pilih model pengamanan yang sesuai dengan karakter lokasi, jumlah personel, jam operasional, dan tingkat risiko bisnis.',
+    cta_label: props.publicServiceSection?.cta_label || 'Diskusi Kebutuhan',
+    cta_url: props.publicServiceSection?.cta_url || whatsappUrl.value,
+}));
 
 let revealObserver = null;
 
@@ -335,13 +346,13 @@ onBeforeUnmount(() => {
             <div class="flex flex-col gap-10">
                 <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                     <SectionHeading
-                        eyebrow="Layanan"
-                        title="Pengamanan untuk kebutuhan operasional"
-                        subtitle="Pilih model pengamanan yang sesuai dengan karakter lokasi, jumlah personel, jam operasional, dan tingkat risiko bisnis."
+                        :eyebrow="serviceSectionContent.eyebrow"
+                        :title="serviceSectionContent.title"
+                        :subtitle="serviceSectionContent.subtitle"
                     />
 
-                    <BaseButton :href="whatsappUrl" variant="outline" class="w-full sm:w-fit">
-                        Diskusi Kebutuhan
+                    <BaseButton :href="serviceSectionContent.cta_url" variant="outline" class="w-full sm:w-fit">
+                        {{ serviceSectionContent.cta_label }}
                     </BaseButton>
                 </div>
 

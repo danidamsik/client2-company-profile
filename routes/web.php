@@ -56,6 +56,7 @@ Route::middleware(['auth', 'verified'])
         Route::get('/company-information', [CompanyInformationController::class, 'index'])->name('admin.company-information.index');
         Route::put('/company-information', [CompanyInformationController::class, 'update'])->name('admin.company-information.update');
         Route::get('/services', [ServiceController::class, 'index'])->name('admin.services.index');
+        Route::put('/services/section', [ServiceController::class, 'updateSection'])->name('admin.services.section.update');
         Route::post('/services', [ServiceController::class, 'store'])->name('admin.services.store');
         Route::put('/services/{service}', [ServiceController::class, 'update'])->name('admin.services.update');
         Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('admin.services.destroy');

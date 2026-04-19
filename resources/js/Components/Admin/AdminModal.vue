@@ -22,13 +22,17 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    maxWidth: {
+        type: String,
+        default: '2xl',
+    },
 });
 
 defineEmits(['close', 'submit']);
 </script>
 
 <template>
-    <Modal :show="show" max-width="2xl" @close="$emit('close')">
+    <Modal :show="show" :max-width="maxWidth" @close="$emit('close')">
         <form @submit.prevent="$emit('submit')">
             <div class="border-b border-brand-line px-6 py-5">
                 <div class="flex items-start justify-between gap-4">
