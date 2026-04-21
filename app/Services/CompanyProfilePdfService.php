@@ -4,62 +4,75 @@ namespace App\Services;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Spatie\Browsershot\Browsershot;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyProfilePdfService
 {
     public function download(Request $request): Response
     {
-        $pdf = $this->browsershot($request)->pdf();
+        $response = Http::accept('application/pdf')
+            ->timeout(config('company-profile.browserless.request_timeout_seconds'))
+            ->post($this->browserlessEndpoint(), $this->payload($request))
+            ->throw();
 
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
+        return response($response->body(), 200, [
+            'Content-Type' => $response->header('Content-Type', 'application/pdf'),
             'Content-Disposition' => 'attachment; filename="'.$this->filename().'"',
             'Cache-Control' => 'no-store, no-cache, must-revalidate',
         ]);
     }
 
-    private function browsershot(Request $request): Browsershot
+    private function browserlessEndpoint(): string
+    {
+        $baseUrl = rtrim((string) config('company-profile.browserless.endpoint'), '/');
+        $token = (string) config('company-profile.browserless.token');
+
+        if ($baseUrl === '' || $token === '') {
+            throw new RuntimeException('Browserless endpoint or token is not configured.');
+        }
+
+        return "{$baseUrl}?token=".rawurlencode($token);
+    }
+
+    private function payload(Request $request): array
     {
         $config = config('company-profile.pdf');
-        $browsershot = Browsershot::url($this->printUrl($request))
-            ->setNodeModulePath(base_path('node_modules'))
-            ->windowSize($config['window_width'], $config['window_height'])
-            ->timeout($config['timeout_seconds'])
-            ->deviceScaleFactor($config['device_scale_factor'])
-            ->showBackground()
-            ->format($config['paper_format'])
-            ->margins(
-                $config['margin_top'],
-                $config['margin_right'],
-                $config['margin_bottom'],
-                $config['margin_left'],
-            )
-            ->emulateMedia('screen')
-            ->waitUntilNetworkIdle(false)
-            ->setDelay($config['delay_milliseconds'])
-            ->waitForFunction(
-                "(() => document.body?.dataset?.pdfReady === 'true'
-                    && (!document.fonts || document.fonts.status === 'loaded')
-                    && Array.from(document.images).every((image) => image.complete))()",
-                timeout: $config['wait_for_ready_timeout'],
-            );
 
-        if ($nodeBinary = $config['node_binary']) {
-            $browsershot->setNodeBinary($nodeBinary);
-        }
+        return [
+            'url' => $this->printUrl($request),
+            'gotoOptions' => [
+                'waitUntil' => 'networkidle2',
+                'timeout' => $config['goto_timeout_milliseconds'],
+            ],
+            'waitForFunction' => [
+                'fn' => $this->readyFunction(),
+                'timeout' => $config['wait_for_ready_timeout'],
+            ],
+            'waitForTimeout' => $config['delay_milliseconds'],
+            'options' => [
+                'printBackground' => true,
+                'format' => $config['paper_format'],
+                'margin' => [
+                    'top' => "{$config['margin_top']}mm",
+                    'right' => "{$config['margin_right']}mm",
+                    'bottom' => "{$config['margin_bottom']}mm",
+                    'left' => "{$config['margin_left']}mm",
+                ],
+                'preferCSSPageSize' => false,
+            ],
+        ];
+    }
 
-        if ($npmBinary = $config['npm_binary']) {
-            $browsershot->setNpmBinary($npmBinary);
-        }
-
-        if ($chromePath = $this->chromePath($config['chrome_path'])) {
-            $browsershot->setChromePath($chromePath);
-        }
-
-        return $browsershot;
+    private function readyFunction(): string
+    {
+        return <<<'JS'
+() => document.body?.dataset?.pdfReady === 'true'
+    && (!document.fonts || document.fonts.status === 'loaded')
+    && Array.from(document.images).every((image) => image.complete)
+JS;
     }
 
     private function printUrl(Request $request): string
@@ -103,32 +116,5 @@ class CompanyProfilePdfService
     private function filename(): string
     {
         return 'company-profile-'.Carbon::now()->format('Y-m-d-His').'.pdf';
-    }
-
-    private function chromePath(?string $configuredPath): ?string
-    {
-        if ($configuredPath && is_file($configuredPath)) {
-            return $configuredPath;
-        }
-
-        $candidates = [
-            'C:\Program Files\Google\Chrome\Application\chrome.exe',
-            'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe',
-            'C:\Program Files\Microsoft\Edge\Application\msedge.exe',
-            'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe',
-            '/usr/bin/google-chrome',
-            '/usr/bin/google-chrome-stable',
-            '/usr/bin/chromium',
-            '/usr/bin/chromium-browser',
-            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        ];
-
-        foreach ($candidates as $candidate) {
-            if (is_file($candidate)) {
-                return $candidate;
-            }
-        }
-
-        return null;
     }
 }

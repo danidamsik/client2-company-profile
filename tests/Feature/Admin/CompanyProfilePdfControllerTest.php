@@ -38,7 +38,7 @@ class CompanyProfilePdfControllerTest extends TestCase
         $this->withoutExceptionHandling();
 
         $user = User::factory()->create();
-        $exception = new RuntimeException('Browsershot failed.');
+        $exception = new RuntimeException('Browserless failed.');
 
         Log::spy();
 
@@ -54,7 +54,7 @@ class CompanyProfilePdfControllerTest extends TestCase
             $this->actingAs($user)->get(route('admin.company-profile.export'));
             $this->fail('Expected export request to throw an exception.');
         } catch (RuntimeException $thrown) {
-            $this->assertSame('Browsershot failed.', $thrown->getMessage());
+            $this->assertSame('Browserless failed.', $thrown->getMessage());
         }
 
         Log::shouldHaveReceived('error')
