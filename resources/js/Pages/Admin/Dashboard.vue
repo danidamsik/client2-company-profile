@@ -1,5 +1,7 @@
 <script setup>
 import { Head, Link } from '@inertiajs/vue3';
+import axios from 'axios';
+import { ref } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 defineProps({
@@ -17,12 +19,60 @@ defineProps({
     },
 });
 
+const exportingPdf = ref(false);
+
 const statTone = (tone) => ({
     amber: 'bg-brand-primary text-brand-ink',
     green: 'bg-green-600 text-white',
     orange: 'bg-brand-accent text-white',
     ink: 'bg-brand-ink text-white',
 }[tone] || 'bg-brand-primary text-brand-ink');
+
+const toast = (detail) => {
+    window.dispatchEvent(new CustomEvent('admin:toast', { detail }));
+};
+
+const exportCompanyProfilePdf = async () => {
+    if (exportingPdf.value) {
+        return;
+    }
+
+    exportingPdf.value = true;
+
+    try {
+        const response = await axios.get(route('admin.company-profile.export'), {
+            responseType: 'blob',
+        });
+
+        const downloadUrl = window.URL.createObjectURL(new Blob([response.data], {
+            type: response.headers['content-type'] || 'application/pdf',
+        }));
+        const link = document.createElement('a');
+        const contentDisposition = response.headers['content-disposition'] || '';
+        const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/i);
+
+        link.href = downloadUrl;
+        link.download = filenameMatch?.[1] || 'company-profile.pdf';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(downloadUrl);
+
+        toast({
+            type: 'success',
+            title: 'Export dimulai',
+            message: 'PDF company profile berhasil diunduh.',
+        });
+    } catch (error) {
+        toast({
+            type: 'error',
+            title: 'Export gagal',
+            message: 'PDF belum berhasil dibuat. Coba lagi dalam beberapa saat.',
+        });
+    } finally {
+        exportingPdf.value = false;
+    }
+};
 </script>
 
 <template>
@@ -30,6 +80,36 @@ const statTone = (tone) => ({
 
     <AdminLayout title="Dashboard Admin">
         <div class="space-y-6">
+            <section class="rounded-lg border border-brand-line bg-white p-5 shadow-sm">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div>
+                        <p class="text-body-sm font-semibold uppercase text-brand-accent">Company Profile PDF</p>
+                        <h2 class="mt-1 text-xl font-bold text-brand-ink">Export tampilan website untuk kebutuhan cetak</h2>
+                        <p class="mt-2 max-w-2xl text-body-sm text-stone-600">
+                            Sistem akan merender halaman publik dari atas sampai bawah memakai Chrome headless agar hasil PDF mendekati tampilan website.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="focus-ring inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-brand-ink px-5 text-body-sm font-semibold text-white transition hover:bg-brand-charcoal disabled:cursor-not-allowed disabled:opacity-70"
+                        :disabled="exportingPdf"
+                        @click="exportCompanyProfilePdf"
+                    >
+                        <svg
+                            v-if="exportingPdf"
+                            class="h-4 w-4 animate-spin"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            aria-hidden="true"
+                        >
+                            <path d="M10 3a7 7 0 1 1-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                        <span>{{ exportingPdf ? 'Sedang export...' : 'Export PDF' }}</span>
+                    </button>
+                </div>
+            </section>
+
             <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <component
                     :is="stat.href ? Link : 'div'"

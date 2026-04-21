@@ -7,6 +7,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    printMode: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const imageFailed = ref(false);
@@ -18,13 +22,13 @@ const imageFailed = ref(false);
             <div class="overflow-hidden bg-brand-muted">
                 <img
                     v-if="item.image && !imageFailed"
-                    :src="item.image"
-                    :alt="item.alt"
-                    class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
-                    loading="lazy"
-                    decoding="async"
-                    @error="imageFailed = true"
-                />
+                :src="item.image"
+                :alt="item.alt"
+                class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+                :loading="printMode ? 'eager' : 'lazy'"
+                decoding="async"
+                @error="imageFailed = true"
+            />
 
                 <div v-else class="image-fallback rounded-none">
                     <div class="flex h-14 w-14 items-center justify-center rounded-lg bg-white/80 text-brand-accent shadow-card">

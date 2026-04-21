@@ -16,6 +16,10 @@ const props = defineProps({
             location: 'Jakarta, Indonesia',
         }),
     },
+    printMode: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const navItems = [
@@ -66,6 +70,10 @@ const updateActiveSection = () => {
 };
 
 onMounted(() => {
+    if (props.printMode) {
+        return;
+    }
+
     updateActiveSection();
     window.addEventListener('scroll', updateActiveSection, { passive: true });
 });
@@ -76,10 +84,14 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-white text-brand-ink">
+    <div class="min-h-screen bg-white text-brand-ink" :class="{ 'pdf-export-mode': printMode }">
         <header
-            class="sticky top-0 z-50 border-b transition duration-200"
-            :class="isScrolled ? 'border-brand-line bg-white/95 shadow-nav backdrop-blur' : 'border-transparent bg-white'"
+            :class="printMode
+                ? 'border-b border-brand-line bg-white'
+                : [
+                    'sticky top-0 z-50 border-b transition duration-200',
+                    isScrolled ? 'border-brand-line bg-white/95 shadow-nav backdrop-blur' : 'border-transparent bg-white',
+                ]"
         >
             <nav class="container flex h-20 items-center justify-between gap-4" aria-label="Navigasi utama">
                 <button type="button" class="focus-ring rounded-lg" aria-label="Kembali ke bagian utama" @click="scrollToSection('home')">

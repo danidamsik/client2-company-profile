@@ -117,7 +117,6 @@ class PublicContentService
     {
         return Service::query()
             ->latest('updated_at')
-            ->take(6)
             ->get(['id', 'title', 'description', 'category', 'icon', 'points', 'updated_at'])
             ->map(fn (Service $service): array => [
                 'id' => $service->id,

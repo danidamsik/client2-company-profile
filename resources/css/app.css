@@ -22,6 +22,11 @@
         @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:ring-offset-white;
     }
 
+    .pdf-export-mode .reveal-on-scroll {
+        @apply translate-y-0 opacity-100 blur-0;
+        transition: none;
+    }
+
     .reveal-on-scroll {
         @apply translate-y-5 opacity-0 blur-sm transition duration-700 ease-out;
         transition-property: opacity, transform, filter;

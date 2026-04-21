@@ -7,6 +7,10 @@ defineProps({
         type: Object,
         required: true,
     },
+    printMode: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const imageFailed = ref(false);
@@ -20,7 +24,7 @@ const imageFailed = ref(false);
                 :src="certification.image"
                 :alt="certification.alt"
                 class="aspect-[4/3] w-full rounded-lg border border-brand-line bg-white object-cover"
-                loading="lazy"
+                :loading="printMode ? 'eager' : 'lazy'"
                 decoding="async"
                 @error="imageFailed = true"
             />

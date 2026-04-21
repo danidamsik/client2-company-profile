@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AboutSectionController;
 use App\Http\Controllers\Admin\CertificationController;
+use App\Http\Controllers\Admin\CompanyProfilePdfController;
 use App\Http\Controllers\Admin\CompanyInformationController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\GalleryController;
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'verified'])
         Route::put('/about-sections', [AboutSectionController::class, 'update'])->name('admin.about-sections.update');
         Route::get('/company-information', [CompanyInformationController::class, 'index'])->name('admin.company-information.index');
         Route::put('/company-information', [CompanyInformationController::class, 'update'])->name('admin.company-information.update');
+        Route::get('/company-profile/export-pdf', CompanyProfilePdfController::class)->name('admin.company-profile.export');
         Route::get('/services', [ServiceController::class, 'index'])->name('admin.services.index');
         Route::put('/services/section', [ServiceController::class, 'updateSection'])->name('admin.services.section.update');
         Route::post('/services', [ServiceController::class, 'store'])->name('admin.services.store');

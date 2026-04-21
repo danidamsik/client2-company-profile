@@ -1,6 +1,6 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import BadgeLabel from '@/Components/Public/BadgeLabel.vue';
 import BaseButton from '@/Components/Public/BaseButton.vue';
 import BaseCard from '@/Components/Public/BaseCard.vue';
@@ -53,6 +53,10 @@ const props = defineProps({
     publicGalleries: {
         type: Array,
         default: () => [],
+    },
+    isPrintMode: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -113,7 +117,6 @@ const heroContent = computed(() => ({
     subtitle: props.publicHeroSection?.subtitle || 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan personel sigap, terlatih, dan mudah dikoordinasikan.',
     primary_cta_label: props.publicHeroSection?.primary_cta_label || 'Hubungi Kami',
     primary_cta_url: props.publicHeroSection?.primary_cta_url || whatsappUrl.value,
-    secondary_cta_label: props.publicHeroSection?.secondary_cta_label || 'Konsultasi Sekarang',
     secondary_cta_url: props.publicHeroSection?.secondary_cta_url || whatsappUrl.value,
     image: props.publicHeroSection?.image || '/images/security-guard-entrance.jpg',
     note: props.publicHeroSection?.note || 'Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.',
@@ -206,6 +209,16 @@ const submitContact = () => {
 onMounted(() => {
     const elements = document.querySelectorAll('[data-reveal]');
 
+    if (props.isPrintMode) {
+        elements.forEach((element) => element.classList.add('is-visible'));
+
+        nextTick(() => {
+            document.body.dataset.pdfReady = 'true';
+        });
+
+        return;
+    }
+
     if (!('IntersectionObserver' in window)) {
         elements.forEach((element) => element.classList.add('is-visible'));
         return;
@@ -229,6 +242,7 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
+    delete document.body.dataset.pdfReady;
     revealObserver?.disconnect();
 });
 </script>
@@ -236,7 +250,7 @@ onBeforeUnmount(() => {
 <template>
     <Head :title="seo.title" />
 
-    <MainLayout :company="companyInfo">
+    <MainLayout :company="companyInfo" :print-mode="isPrintMode">
         <section
             id="home"
             class="relative flex min-h-[calc(100svh-8.5rem)] scroll-mt-24 overflow-hidden bg-brand-ink text-white"
@@ -269,9 +283,6 @@ onBeforeUnmount(() => {
                     <div class="reveal-on-scroll mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap" data-reveal>
                         <BaseButton :href="heroContent.primary_cta_url" size="lg" variant="primary" class="w-full sm:w-auto">
                             {{ heroContent.primary_cta_label }}
-                        </BaseButton>
-                        <BaseButton :href="heroContent.secondary_cta_url" size="lg" variant="secondary" class="w-full sm:w-auto">
-                            {{ heroContent.secondary_cta_label }}
                         </BaseButton>
                         <BaseButton size="lg" variant="outline" class="w-full sm:w-auto" @click="scrollToSection('layanan')">
                             Lihat Layanan
@@ -327,7 +338,7 @@ onBeforeUnmount(() => {
                             :src="aboutContent.image"
                             alt="Petugas keamanan sedang berjaga di area gedung"
                             class="aspect-[4/3] w-full object-cover"
-                            loading="lazy"
+                            :loading="isPrintMode ? 'eager' : 'lazy'"
                             decoding="async"
                         />
                     </div>
@@ -393,6 +404,7 @@ onBeforeUnmount(() => {
                         v-for="(certification, index) in certificationItems"
                         :key="certification.id || certification.title"
                         :certification="certification"
+                        :print-mode="isPrintMode"
                         class="reveal-on-scroll"
                         :style="{ transitionDelay: `${Math.min(index, 5) * 70}ms` }"
                         data-reveal
@@ -431,6 +443,7 @@ onBeforeUnmount(() => {
                         v-for="(item, index) in galleryItems"
                         :key="item.id || item.title"
                         :item="item"
+                        :print-mode="isPrintMode"
                         class="reveal-on-scroll"
                         :style="{ transitionDelay: `${Math.min(index, 7) * 55}ms` }"
                         data-reveal
