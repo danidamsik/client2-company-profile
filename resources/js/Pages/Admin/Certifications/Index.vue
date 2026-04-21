@@ -193,20 +193,6 @@ onBeforeUnmount(() => {
 
     <AdminLayout title="Sertifikasi">
         <div class="space-y-6">
-            <section class="grid gap-4 md:grid-cols-2">
-                <div class="rounded-lg border border-brand-line bg-white p-5 shadow-sm">
-                    <p class="text-body-sm font-semibold uppercase text-brand-accent">Total Sertifikasi</p>
-                    <p class="mt-3 text-3xl font-bold text-brand-ink">{{ summary.total }}</p>
-                    <p class="mt-1 text-body-sm text-stone-600">Data tersimpan di tabel certifications.</p>
-                </div>
-
-                <div class="rounded-lg border border-brand-line bg-white p-5 shadow-sm">
-                    <p class="text-body-sm font-semibold uppercase text-brand-accent">Update Terakhir</p>
-                    <p class="mt-3 text-xl font-bold text-brand-ink">{{ summary.latestUpdated || 'Belum ada' }}</p>
-                    <p class="mt-1 text-body-sm text-stone-600">Acuan review dokumen terbaru.</p>
-                </div>
-            </section>
-
             <section class="rounded-lg border border-brand-line bg-white shadow-sm">
                 <div class="flex flex-col gap-4 border-b border-brand-line p-5 lg:flex-row lg:items-center lg:justify-between">
                     <div>
@@ -214,6 +200,9 @@ onBeforeUnmount(() => {
                         <h2 class="mt-1 text-xl font-bold text-brand-ink">Data sertifikasi perusahaan</h2>
                         <p class="mt-1 max-w-3xl text-body-sm text-stone-600">
                             Gambar sertifikasi wajib JPG/PNG dan akan dipreview sebelum disimpan.
+                        </p>
+                        <p class="mt-3 text-body-sm font-semibold text-stone-600">
+                            Total sertifikasi: <span class="text-brand-ink">{{ summary.total }}</span>
                         </p>
                     </div>
 

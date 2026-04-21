@@ -67,13 +67,6 @@ class DashboardController extends Controller
                 'href' => route('admin.galleries.index'),
                 'tone' => 'orange',
             ],
-            [
-                'label' => 'Lead Contact',
-                'value' => $summary['contacts'],
-                'description' => 'Pesan calon klien dari form publik.',
-                'href' => null,
-                'tone' => 'ink',
-            ],
         ];
     }
 }

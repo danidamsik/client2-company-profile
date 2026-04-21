@@ -85,9 +85,6 @@ const exportCompanyProfilePdf = async () => {
                     <div>
                         <p class="text-body-sm font-semibold uppercase text-brand-accent">Company Profile PDF</p>
                         <h2 class="mt-1 text-xl font-bold text-brand-ink">Export tampilan website untuk kebutuhan cetak</h2>
-                        <p class="mt-2 max-w-2xl text-body-sm text-stone-600">
-                            Sistem akan merender halaman publik dari atas sampai bawah memakai Chrome headless agar hasil PDF mendekati tampilan website.
-                        </p>
                     </div>
 
                     <button

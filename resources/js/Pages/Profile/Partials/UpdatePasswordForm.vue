@@ -15,11 +15,29 @@ const form = useForm({
     password_confirmation: '',
 });
 
+const toast = (detail) => {
+    window.dispatchEvent(new CustomEvent('admin:toast', { detail }));
+};
+
 const updatePassword = () => {
     form.put(route('password.update'), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+
+            toast({
+                type: 'success',
+                title: 'Berhasil',
+                message: 'Password akun berhasil diperbarui.',
+            });
+        },
         onError: () => {
+            toast({
+                type: 'error',
+                title: 'Periksa form',
+                message: 'Password belum berhasil diperbarui. Cek data yang kamu isi.',
+            });
+
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation');
                 passwordInput.value.focus();

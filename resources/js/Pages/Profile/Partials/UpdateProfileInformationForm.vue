@@ -20,6 +20,30 @@ const form = useForm({
     name: user.name,
     email: user.email,
 });
+
+const toast = (detail) => {
+    window.dispatchEvent(new CustomEvent('admin:toast', { detail }));
+};
+
+const submitProfileInformation = () => {
+    form.patch(route('profile.update'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            toast({
+                type: 'success',
+                title: 'Berhasil',
+                message: 'Profil akun berhasil diperbarui.',
+            });
+        },
+        onError: () => {
+            toast({
+                type: 'error',
+                title: 'Periksa form',
+                message: 'Informasi profil belum valid.',
+            });
+        },
+    });
+};
 </script>
 
 <template>
@@ -32,7 +56,7 @@ const form = useForm({
             </p>
         </header>
 
-        <form @submit.prevent="form.patch(route('profile.update'))" class="mt-6 space-y-6">
+        <form @submit.prevent="submitProfileInformation" class="mt-6 space-y-6">
             <div>
                 <InputLabel for="name" value="Name" />
 
