@@ -307,7 +307,7 @@ onBeforeUnmount(() => {
         </section>
 
         <SectionContainer id="tentang" tone="white" tight-top>
-            <div class="grid gap-12 lg:grid-cols-[1fr_0.86fr] lg:items-center">
+            <div class="grid gap-10 lg:grid-cols-[1fr_0.86fr] lg:items-start">
                 <div class="reveal-on-scroll" data-reveal>
                     <SectionHeading
                         :eyebrow="aboutContent.eyebrow"
@@ -315,7 +315,7 @@ onBeforeUnmount(() => {
                         :subtitle="aboutContent.subtitle"
                     />
 
-                    <div class="mt-8 grid gap-3">
+                    <div class="mt-6 grid gap-3">
                         <div
                             v-for="item in aboutAdvantages"
                             :key="item"
@@ -342,7 +342,7 @@ onBeforeUnmount(() => {
                         />
                     </div>
 
-                    <div class="mt-5 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+                    <div class="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
                         <BaseCard v-for="item in aboutValues" :key="item.title" tone="soft">
                             <h3 class="text-lg font-bold text-brand-ink">{{ item.title }}</h3>
                             <p class="mt-2 text-body-sm text-stone-700">{{ item.description }}</p>
@@ -353,8 +353,8 @@ onBeforeUnmount(() => {
         </SectionContainer>
 
         <SectionContainer id="layanan">
-            <div class="flex flex-col gap-10">
-                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div class="flex flex-col gap-8">
+                <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                     <SectionHeading
                         :eyebrow="serviceSectionContent.eyebrow"
                         :title="serviceSectionContent.title"
@@ -391,7 +391,7 @@ onBeforeUnmount(() => {
         </SectionContainer>
 
         <SectionContainer id="sertifikasi" tone="muted">
-            <div class="flex flex-col gap-10">
+            <div class="flex flex-col gap-8">
                 <SectionHeading
                     eyebrow="Sertifikasi"
                     title="Sertifikasi yang memperkuat kepercayaan"
@@ -424,8 +424,8 @@ onBeforeUnmount(() => {
         </SectionContainer>
 
         <SectionContainer id="galeri">
-            <div class="flex flex-col gap-10">
-                <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div class="flex flex-col gap-8">
+                <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
                     <SectionHeading
                         eyebrow="Galeri"
                         title="Dokumentasi kegiatan"
@@ -463,7 +463,7 @@ onBeforeUnmount(() => {
         </SectionContainer>
 
         <SectionContainer id="contact" tone="dark">
-            <div class="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+            <div class="grid gap-8 lg:grid-cols-[1fr_0.8fr] lg:items-center">
                 <div class="reveal-on-scroll" data-reveal>
                     <SectionHeading
                         eyebrow="Kontak"
