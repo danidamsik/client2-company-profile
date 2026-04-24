@@ -20,12 +20,17 @@ const fallbackHero = {
     title: 'PT Secure Guard Indonesia',
     subtitle: 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan personel sigap, terlatih, dan mudah dikoordinasikan.',
     primary_cta_label: 'Hubungi Kami',
-    primary_cta_url: 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.',
-    secondary_cta_label: 'Konsultasi Sekarang',
-    secondary_cta_url: 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.',
+    primary_cta_url: '6281234567890',
+    primary_cta_message: 'Halo PT Secure Guard Indonesia, saya ingin konsultasi kebutuhan keamanan.',
     image: '/images/security-guard-entrance.jpg',
     note: 'Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.',
 };
+
+const trustItems = [
+    { value: 'Legal', label: 'BUJP dan dokumen pendukung' },
+    { value: 'Terlatih', label: 'Personel dengan SOP lapangan' },
+    { value: 'Responsif', label: 'Konsultasi cepat via WhatsApp' },
+];
 
 const imageInput = ref(null);
 const imagePreviewUrl = ref(props.heroSection.image_url || '');
@@ -39,8 +44,7 @@ const form = useForm({
     subtitle: props.heroSection.subtitle || '',
     primary_cta_label: props.heroSection.primary_cta_label || '',
     primary_cta_url: props.heroSection.primary_cta_url || '',
-    secondary_cta_label: props.heroSection.secondary_cta_label || '',
-    secondary_cta_url: props.heroSection.secondary_cta_url || '',
+    primary_cta_message: props.heroSection.primary_cta_message || '',
     note: props.heroSection.note || '',
     image: null,
 });
@@ -54,8 +58,7 @@ const preview = computed(() => ({
     subtitle: form.subtitle || fallbackHero.subtitle,
     primary_cta_label: form.primary_cta_label || fallbackHero.primary_cta_label,
     primary_cta_url: form.primary_cta_url || fallbackHero.primary_cta_url,
-    secondary_cta_label: form.secondary_cta_label || fallbackHero.secondary_cta_label,
-    secondary_cta_url: form.secondary_cta_url || fallbackHero.secondary_cta_url,
+    primary_cta_message: form.primary_cta_message || fallbackHero.primary_cta_message,
     image: imagePreviewUrl.value || fallbackHero.image,
     note: form.note || fallbackHero.note,
 }));
@@ -99,8 +102,7 @@ const setSavedDefaults = () => {
         subtitle: props.heroSection.subtitle || '',
         primary_cta_label: props.heroSection.primary_cta_label || '',
         primary_cta_url: props.heroSection.primary_cta_url || '',
-        secondary_cta_label: props.heroSection.secondary_cta_label || '',
-        secondary_cta_url: props.heroSection.secondary_cta_url || '',
+        primary_cta_message: props.heroSection.primary_cta_message || '',
         note: props.heroSection.note || '',
         image: null,
     });
@@ -224,23 +226,18 @@ onBeforeUnmount(() => {
                             </label>
 
                             <label class="block">
-                                <span class="text-body-sm font-semibold text-brand-ink">URL CTA utama</span>
-                                <input v-model="form.primary_cta_url" type="text" maxlength="255" placeholder="https://wa.me/..." class="focus-ring mt-2 block h-11 w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('cta')" @blur="clearActivePreview" />
+                                <span class="text-body-sm font-semibold text-brand-ink">Nomor / URL CTA utama</span>
+                                <input v-model="form.primary_cta_url" type="text" maxlength="255" placeholder="6281234567890 atau https://wa.me/6281234567890" class="focus-ring mt-2 block h-11 w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('cta')" @blur="clearActivePreview" />
                                 <p v-if="form.errors.primary_cta_url" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.primary_cta_url }}</p>
                             </label>
-
-                            <label class="block">
-                                <span class="text-body-sm font-semibold text-brand-ink">CTA kedua</span>
-                                <input v-model="form.secondary_cta_label" type="text" maxlength="60" placeholder="Konsultasi Sekarang" class="focus-ring mt-2 block h-11 w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('cta')" @blur="clearActivePreview" />
-                                <p v-if="form.errors.secondary_cta_label" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.secondary_cta_label }}</p>
-                            </label>
-
-                            <label class="block">
-                                <span class="text-body-sm font-semibold text-brand-ink">URL CTA kedua</span>
-                                <input v-model="form.secondary_cta_url" type="text" maxlength="255" placeholder="https://wa.me/..." class="focus-ring mt-2 block h-11 w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('cta')" @blur="clearActivePreview" />
-                                <p v-if="form.errors.secondary_cta_url" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.secondary_cta_url }}</p>
-                            </label>
                         </div>
+
+                        <label class="block">
+                            <span class="text-body-sm font-semibold text-brand-ink">Pesan default WhatsApp</span>
+                            <textarea v-model="form.primary_cta_message" rows="4" maxlength="500" placeholder="Halo PT Secure Guard Indonesia, saya ingin konsultasi kebutuhan keamanan." class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('cta')" @blur="clearActivePreview" />
+                            <p class="mt-2 text-xs font-medium uppercase text-stone-500">Jika CTA utama mengarah ke WhatsApp, pesan ini akan otomatis ditambahkan ke link.</p>
+                            <p v-if="form.errors.primary_cta_message" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.primary_cta_message }}</p>
+                        </label>
 
                         <label class="block">
                             <span class="text-body-sm font-semibold text-brand-ink">Microcopy</span>
@@ -283,10 +280,10 @@ onBeforeUnmount(() => {
                         </div>
 
                         <div class="overflow-hidden rounded-lg border border-brand-line bg-brand-ink text-white">
-                            <div class="relative min-h-[520px]">
+                            <div class="relative min-h-[560px]">
                                 <img :src="preview.image" :alt="preview.title" class="absolute inset-0 h-full w-full object-cover" />
-                                <div class="absolute inset-0 bg-brand-ink/78"></div>
-                                <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-brand-ink to-transparent"></div>
+                                <div class="absolute inset-0 bg-gradient-to-r from-brand-ink via-brand-ink/80 to-brand-ink/25"></div>
+                                <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
                                 <div
                                     class="absolute left-4 right-4 top-4 z-10 rounded-lg border border-dashed p-3 text-body-sm font-semibold text-brand-primary backdrop-blur-sm transition"
                                     :class="previewBoxClass('image')"
@@ -294,65 +291,81 @@ onBeforeUnmount(() => {
                                     Gambar hero
                                 </div>
 
-                                <div class="relative z-10 flex min-h-[520px] flex-col justify-end p-5 sm:p-6">
-                                    <div
-                                        class="rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
-                                        :class="previewBoxClass('badges')"
-                                    >
-                                        <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Eyebrow & Badge</p>
-                                        <div class="flex flex-wrap gap-2">
-                                            <span v-if="preview.eyebrow" class="rounded-md border border-brand-primary bg-brand-primary px-3 py-1 text-body-sm font-semibold text-brand-ink">
-                                                {{ preview.eyebrow }}
-                                            </span>
-                                            <span v-if="preview.badge" class="rounded-md border border-white/20 bg-white/10 px-3 py-1 text-body-sm font-semibold text-white">
-                                                {{ preview.badge }}
-                                            </span>
+                                <div class="relative z-10 flex min-h-[560px] items-center px-5 py-10 sm:px-6 sm:py-12">
+                                    <div class="w-full max-w-4xl">
+                                        <div
+                                            class="rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
+                                            :class="previewBoxClass('badges')"
+                                        >
+                                            <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Eyebrow & Badge</p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <span v-if="preview.eyebrow" class="rounded-md border border-brand-primary bg-brand-primary px-3 py-1 text-body-sm font-semibold text-brand-ink">
+                                                    {{ preview.eyebrow }}
+                                                </span>
+                                                <span v-if="preview.badge" class="rounded-md border border-white/20 bg-white/10 px-3 py-1 text-body-sm font-semibold text-white">
+                                                    {{ preview.badge }}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div
-                                        class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
-                                        :class="previewBoxClass('title')"
-                                    >
-                                        <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Judul hero</p>
-                                        <h2 class="text-4xl font-bold leading-tight text-white">
-                                            {{ preview.title }}
-                                        </h2>
-                                    </div>
-
-                                    <div
-                                        class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
-                                        :class="previewBoxClass('subtitle')"
-                                    >
-                                        <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Subjudul</p>
-                                        <p class="text-body-md leading-7 text-white/82">
-                                            {{ preview.subtitle }}
-                                        </p>
-                                    </div>
-
-                                    <div
-                                        class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
-                                        :class="previewBoxClass('cta')"
-                                    >
-                                        <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Tombol CTA</p>
-                                        <div class="flex flex-col gap-3 sm:flex-row">
-                                            <span class="inline-flex h-12 items-center justify-center rounded-lg border border-brand-primary bg-brand-primary px-5 text-body-sm font-semibold text-brand-ink">
-                                                {{ preview.primary_cta_label }}
-                                            </span>
-                                            <span class="inline-flex h-12 items-center justify-center rounded-lg border border-white/25 bg-white px-5 text-body-sm font-semibold text-brand-ink">
-                                                {{ preview.secondary_cta_label }}
-                                            </span>
+                                        <div
+                                            class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
+                                            :class="previewBoxClass('title')"
+                                        >
+                                            <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Judul hero</p>
+                                            <h2 class="text-4xl font-bold leading-tight text-white">
+                                                {{ preview.title }}
+                                            </h2>
                                         </div>
-                                    </div>
 
-                                    <div
-                                        class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
-                                        :class="previewBoxClass('note')"
-                                    >
-                                        <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Microcopy</p>
-                                        <p class="rounded-lg border border-white/15 bg-white/10 p-3 text-body-sm text-white/78">
-                                            {{ preview.note }}
-                                        </p>
+                                        <div
+                                            class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
+                                            :class="previewBoxClass('subtitle')"
+                                        >
+                                            <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Subjudul</p>
+                                            <p class="text-body-md leading-7 text-white/82">
+                                                {{ preview.subtitle }}
+                                            </p>
+                                        </div>
+
+                                        <div
+                                            class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
+                                            :class="previewBoxClass('cta')"
+                                        >
+                                            <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Tombol CTA</p>
+                                            <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                                                <span class="inline-flex h-12 items-center justify-center rounded-lg border border-brand-primary bg-brand-primary px-5 text-body-sm font-semibold text-brand-ink">
+                                                    {{ preview.primary_cta_label }}
+                                                </span>
+                                                <span class="inline-flex h-12 items-center justify-center rounded-lg border border-white/25 bg-transparent px-5 text-body-sm font-semibold text-white">
+                                                    Lihat Layanan
+                                                </span>
+                                            </div>
+                                            <p class="mt-3 text-body-sm text-white/70">
+                                                {{ preview.primary_cta_message }}
+                                            </p>
+                                        </div>
+
+                                        <div
+                                            class="mt-4 rounded-lg border border-dashed p-3 backdrop-blur-sm transition"
+                                            :class="previewBoxClass('note')"
+                                        >
+                                            <p class="mb-2 text-xs font-bold uppercase text-brand-primary">Microcopy</p>
+                                            <p class="rounded-lg border border-white/15 bg-white/10 p-3 text-body-sm text-white/78">
+                                                {{ preview.note }}
+                                            </p>
+                                        </div>
+
+                                        <div class="mt-7 hidden max-w-3xl grid-cols-3 gap-3 sm:grid">
+                                            <div
+                                                v-for="item in trustItems"
+                                                :key="item.value"
+                                                class="rounded-lg border border-white/20 bg-white/10 p-4 backdrop-blur"
+                                            >
+                                                <p class="text-lg font-bold text-brand-primary">{{ item.value }}</p>
+                                                <p class="mt-1 text-body-sm text-white/75">{{ item.label }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

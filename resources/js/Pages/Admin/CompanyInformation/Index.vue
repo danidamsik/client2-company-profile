@@ -72,12 +72,6 @@ const handleSuccess = () => {
     form.logo = null;
     resetFileInput();
     setSavedDefaults();
-
-    toast({
-        type: 'success',
-        title: 'Berhasil',
-        message: 'Informasi company berhasil diperbarui.',
-    });
 };
 
 const submitCompanyInformation = () => {

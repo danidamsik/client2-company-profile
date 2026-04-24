@@ -19,8 +19,6 @@ return new class extends Migration
             $table->text('subtitle');
             $table->string('primary_cta_label')->nullable();
             $table->string('primary_cta_url')->nullable();
-            $table->string('secondary_cta_label')->nullable();
-            $table->string('secondary_cta_url')->nullable();
             $table->string('image')->nullable();
             $table->string('note')->nullable();
             $table->boolean('is_active')->default(true);

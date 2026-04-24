@@ -79,8 +79,7 @@ class HeroSectionController extends Controller
             'subtitle' => $heroSection->subtitle,
             'primary_cta_label' => $heroSection->primary_cta_label,
             'primary_cta_url' => $heroSection->primary_cta_url,
-            'secondary_cta_label' => $heroSection->secondary_cta_label,
-            'secondary_cta_url' => $heroSection->secondary_cta_url,
+            'primary_cta_message' => $heroSection->primary_cta_message,
             'image' => $heroSection->image,
             'image_url' => $this->imageUrl($heroSection->image),
             'note' => $heroSection->note,
@@ -93,17 +92,14 @@ class HeroSectionController extends Controller
      */
     private function defaultData(): array
     {
-        $whatsappUrl = 'https://wa.me/6281234567890?text=Halo%20PT%20Secure%20Guard%20Indonesia,%20saya%20ingin%20konsultasi%20kebutuhan%20keamanan.';
-
         return [
             'eyebrow' => 'Security Profesional',
             'badge' => 'Siap Operasional',
             'title' => 'PT Secure Guard Indonesia',
             'subtitle' => 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan personel sigap, terlatih, dan mudah dikoordinasikan.',
             'primary_cta_label' => 'Hubungi Kami',
-            'primary_cta_url' => $whatsappUrl,
-            'secondary_cta_label' => 'Konsultasi Sekarang',
-            'secondary_cta_url' => $whatsappUrl,
+            'primary_cta_url' => '6281234567890',
+            'primary_cta_message' => 'Halo PT Secure Guard Indonesia, saya ingin konsultasi kebutuhan keamanan.',
             'image' => null,
             'note' => 'Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.',
             'is_active' => true,

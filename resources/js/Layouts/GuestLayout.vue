@@ -1,6 +1,14 @@
 <script setup>
 import BrandLogo from '@/Components/Public/BrandLogo.vue';
-import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+
+const page = usePage();
+const companyBrand = computed(() => ({
+    logo: page.props.companyBrand?.logo || '',
+    name: page.props.companyBrand?.name || 'PT Secure Guard Indonesia',
+    location: page.props.companyBrand?.location || 'Jakarta, Indonesia',
+}));
 </script>
 
 <template>
@@ -18,7 +26,7 @@ import { Link } from '@inertiajs/vue3';
 
             <div class="relative z-10 flex min-h-screen flex-col justify-between p-10 xl:p-14">
                 <Link href="/" class="focus-ring w-fit rounded-lg" aria-label="Kembali ke halaman utama">
-                    <BrandLogo inverse />
+                    <BrandLogo inverse :logo-url="companyBrand.logo" :name="companyBrand.name" :subtitle="companyBrand.location" />
                 </Link>
 
                 <div class="max-w-xl pb-8">
@@ -36,7 +44,7 @@ import { Link } from '@inertiajs/vue3';
         <div class="flex min-h-screen flex-col px-5 py-6 sm:px-8 lg:px-12">
             <div class="flex items-center justify-between gap-4 lg:hidden">
                 <Link href="/" class="focus-ring rounded-lg" aria-label="Kembali ke halaman utama">
-                    <BrandLogo />
+                    <BrandLogo :logo-url="companyBrand.logo" :name="companyBrand.name" :subtitle="companyBrand.location" />
                 </Link>
             </div>
 

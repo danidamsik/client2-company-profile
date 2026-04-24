@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 <template>
     <div class="min-h-screen bg-white text-brand-ink" :class="{ 'pdf-export-mode': printMode }">
         <header
-            :class="printMode
+                :class="printMode
                 ? 'border-b border-brand-line bg-white'
                 : [
                     'sticky top-0 z-50 border-b transition duration-200',
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
         >
             <nav class="container flex h-20 items-center justify-between gap-4" aria-label="Navigasi utama">
                 <button type="button" class="focus-ring rounded-lg" aria-label="Kembali ke bagian utama" @click="scrollToSection('home')">
-                    <BrandLogo :logo-url="props.company.logo" :name="props.company.name" :subtitle="props.company.location" />
+                    <BrandLogo :logo-url="props.company.logo" :name="props.company.name" />
                 </button>
 
                 <div class="hidden items-center gap-1 lg:flex">

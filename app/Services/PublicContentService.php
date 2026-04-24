@@ -160,7 +160,7 @@ class PublicContentService
         $heroSection = HeroSection::query()
             ->where('is_active', true)
             ->latest('updated_at')
-            ->first(['id', 'eyebrow', 'badge', 'title', 'subtitle', 'primary_cta_label', 'primary_cta_url', 'secondary_cta_label', 'secondary_cta_url', 'image', 'note']);
+            ->first(['id', 'eyebrow', 'badge', 'title', 'subtitle', 'primary_cta_label', 'primary_cta_url', 'primary_cta_message', 'image', 'note']);
 
         if (! $heroSection) {
             return null;
@@ -173,9 +173,12 @@ class PublicContentService
             'title' => $this->replaceDefaultCompanyName($heroSection->title, $companyInformation['name']),
             'subtitle' => $this->replaceDefaultCompanyName($heroSection->subtitle, $companyInformation['name']),
             'primary_cta_label' => $heroSection->primary_cta_label,
-            'primary_cta_url' => $this->effectiveCtaUrl($heroSection->primary_cta_url, $companyInformation['whatsapp_url']),
-            'secondary_cta_label' => $heroSection->secondary_cta_label,
-            'secondary_cta_url' => $this->effectiveCtaUrl($heroSection->secondary_cta_url, $companyInformation['whatsapp_url']),
+            'primary_cta_url' => $this->effectiveCtaUrl(
+                $heroSection->primary_cta_url,
+                $companyInformation['whatsapp_url'],
+                $this->replaceDefaultCompanyName($heroSection->primary_cta_message, $companyInformation['name']),
+                $companyInformation['whatsapp_number'],
+            ),
             'image' => $this->imageUrl($heroSection->image),
             'note' => $this->replaceDefaultCompanyName($heroSection->note, $companyInformation['name']),
         ];
@@ -290,18 +293,88 @@ class PublicContentService
         return $number;
     }
 
-    private function whatsappUrl(string $number, string $message): string
+    private function whatsappUrl(string $number, ?string $message = null): string
     {
-        return "https://wa.me/{$number}?text=".rawurlencode($message);
+        $url = "https://wa.me/{$number}";
+
+        if (! $message) {
+            return $url;
+        }
+
+        return $url.'?text='.rawurlencode($message);
     }
 
-    private function effectiveCtaUrl(?string $url, string $whatsappUrl): string
+    private function effectiveCtaUrl(?string $url, string $whatsappUrl, ?string $whatsappMessage = null, ?string $fallbackWhatsappNumber = null): string
     {
-        if (! $url || Str::contains($url, 'wa.me/')) {
-            return $whatsappUrl;
+        if (! $url) {
+            return $this->buildWhatsappCtaUrl($fallbackWhatsappNumber, $whatsappMessage, $whatsappUrl);
+        }
+
+        if ($this->looksLikeWhatsappTarget($url)) {
+            $number = $this->extractWhatsappNumber($url) ?: ($fallbackWhatsappNumber ? $this->whatsappNumber($fallbackWhatsappNumber) : '');
+            $message = $whatsappMessage ?: $this->extractWhatsappMessage($url) ?: $this->extractWhatsappMessage($whatsappUrl);
+
+            return $this->buildWhatsappCtaUrl($number, $message, $whatsappUrl);
         }
 
         return $url;
+    }
+
+    private function buildWhatsappCtaUrl(?string $number, ?string $message, string $fallbackWhatsappUrl): string
+    {
+        if (! $number) {
+            return $fallbackWhatsappUrl;
+        }
+
+        return $this->whatsappUrl($this->whatsappNumber($number), $message);
+    }
+
+    private function looksLikeWhatsappTarget(?string $value): bool
+    {
+        if (! $value) {
+            return false;
+        }
+
+        $normalized = Str::lower(trim($value));
+
+        return Str::contains($normalized, ['wa.me/', 'whatsapp.com/'])
+            || preg_match('/^\+?\d[\d\s\-\(\)]*$/', $value) === 1;
+    }
+
+    private function extractWhatsappNumber(?string $value): string
+    {
+        if (! $value) {
+            return '';
+        }
+
+        $normalized = Str::lower(trim($value));
+
+        if (Str::contains($normalized, 'wa.me/')) {
+            $path = trim((string) parse_url($value, PHP_URL_PATH), '/');
+
+            return $this->whatsappNumber($path);
+        }
+
+        if (Str::contains($normalized, 'whatsapp.com/')) {
+            parse_str((string) parse_url($value, PHP_URL_QUERY), $query);
+
+            if (! empty($query['phone'])) {
+                return $this->whatsappNumber((string) $query['phone']);
+            }
+        }
+
+        return $this->whatsappNumber($value);
+    }
+
+    private function extractWhatsappMessage(?string $value): string
+    {
+        if (! $value || ! Str::contains($value, 'text=')) {
+            return '';
+        }
+
+        parse_str((string) parse_url($value, PHP_URL_QUERY), $query);
+
+        return trim((string) ($query['text'] ?? ''));
     }
 
     private function replaceDefaultCompanyName(?string $value, string $companyName): ?string

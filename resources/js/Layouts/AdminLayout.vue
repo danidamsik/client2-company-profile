@@ -62,6 +62,11 @@ const navItems = [
 ];
 
 const user = computed(() => page.props.auth.user);
+const companyBrand = computed(() => ({
+    logo: page.props.companyBrand?.logo || '',
+    name: page.props.companyBrand?.name || 'PT Secure Guard Indonesia',
+    location: page.props.companyBrand?.location || 'Jakarta, Indonesia',
+}));
 const initials = computed(() => user.value?.name
     ?.split(' ')
     .map((part) => part.charAt(0))
@@ -103,11 +108,11 @@ watch(sidebarHidden, (value) => {
             :class="[
                 showingSidebar ? 'translate-x-0' : '-translate-x-full',
                 sidebarHidden ? 'lg:-translate-x-full' : 'lg:translate-x-0',
-            ]"
+                ]"
         >
             <div class="flex h-20 items-center justify-between border-b border-brand-line px-5">
                 <Link :href="route('dashboard')" @click="closeSidebar">
-                    <BrandLogo />
+                    <BrandLogo :logo-url="companyBrand.logo" :name="companyBrand.name" />
                 </Link>
 
                 <button

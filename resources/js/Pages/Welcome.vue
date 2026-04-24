@@ -117,7 +117,6 @@ const heroContent = computed(() => ({
     subtitle: props.publicHeroSection?.subtitle || 'Solusi keamanan profesional dan terpercaya untuk perusahaan, kawasan, dan event yang membutuhkan personel sigap, terlatih, dan mudah dikoordinasikan.',
     primary_cta_label: props.publicHeroSection?.primary_cta_label || 'Hubungi Kami',
     primary_cta_url: props.publicHeroSection?.primary_cta_url || whatsappUrl.value,
-    secondary_cta_url: props.publicHeroSection?.secondary_cta_url || whatsappUrl.value,
     image: props.publicHeroSection?.image || '/images/security-guard-entrance.jpg',
     note: props.publicHeroSection?.note || 'Respon awal untuk kebutuhan kantor, gudang, pabrik, kawasan, dan kegiatan perusahaan.',
 }));
@@ -473,28 +472,27 @@ onBeforeUnmount(() => {
                         inverse
                     />
 
-                    <div class="mt-7 grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-lg border border-white/10 bg-white/10 p-5">
-                            <p class="text-body-sm font-bold uppercase text-brand-primary">WhatsApp</p>
-                            <p class="mt-2 text-body-md text-white">{{ companyInfo.whatsapp }}</p>
-                            <p class="mt-2 text-body-sm text-white/70">Respon awal untuk konsultasi kebutuhan personel.</p>
-                        </div>
+                    <div class="mt-7 overflow-hidden rounded-lg border border-white/10 bg-white/10">
+                        <div class="grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                            <div class="p-5">
+                                <p class="text-body-sm font-bold uppercase text-brand-primary">WhatsApp</p>
+                                <p class="mt-2 text-body-md text-white">{{ companyInfo.whatsapp }}</p>
+                            </div>
 
-                        <div class="rounded-lg border border-white/10 bg-white/10 p-5">
-                            <p class="text-body-sm font-bold uppercase text-brand-primary">Email</p>
-                            <p class="mt-2 text-body-md text-white">{{ companyInfo.email }}</p>
-                            <p class="mt-2 text-body-sm text-white/70">Kirim detail kebutuhan untuk penawaran tertulis.</p>
-                        </div>
+                            <div class="p-5">
+                                <p class="text-body-sm font-bold uppercase text-brand-primary">Email</p>
+                                <p class="mt-2 text-body-md text-white">{{ companyInfo.email }}</p>
+                            </div>
 
-                        <div class="rounded-lg border border-white/10 bg-white/10 p-5">
-                            <p class="text-body-sm font-bold uppercase text-brand-primary">Lokasi</p>
-                            <p class="mt-2 text-body-md text-white">{{ companyInfo.location }}</p>
-                            <p class="mt-2 text-body-sm text-white/70">Acuan koordinasi awal kebutuhan pengamanan.</p>
+                            <div class="p-5">
+                                <p class="text-body-sm font-bold uppercase text-brand-primary">Lokasi</p>
+                                <p class="mt-2 text-body-md text-white">{{ companyInfo.location }}</p>
+                            </div>
                         </div>
                     </div>
 
                     <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-                        <BaseButton :href="whatsappUrl" variant="primary" size="lg" class="w-full sm:w-auto">
+                        <BaseButton :href="heroContent.primary_cta_url" variant="primary" size="lg" class="w-full sm:w-auto">
                             Chat Langsung
                         </BaseButton>
                         <BaseButton :href="emailUrl" variant="outline" size="lg" class="w-full sm:w-auto">

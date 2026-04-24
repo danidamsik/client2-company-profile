@@ -16,12 +16,12 @@ const props = defineProps({
     },
     subtitle: {
         type: String,
-        default: 'Indonesia',
+        default: '',
     },
 });
 
 const displayName = computed(() => props.name || 'PT Secure Guard');
-const displaySubtitle = computed(() => props.subtitle || 'Indonesia');
+const displaySubtitle = computed(() => props.subtitle || '');
 </script>
 
 <template>
@@ -50,7 +50,7 @@ const displaySubtitle = computed(() => props.subtitle || 'Indonesia');
             <span class="block max-w-[12rem] truncate text-body-md font-bold leading-5" :class="inverse ? 'text-white' : 'text-brand-ink'">
                 {{ displayName }}
             </span>
-            <span class="block max-w-[12rem] truncate text-body-sm leading-5" :class="inverse ? 'text-white/70' : 'text-stone-600'">
+            <span v-if="displaySubtitle" class="block max-w-[12rem] truncate text-body-sm leading-5" :class="inverse ? 'text-white/70' : 'text-stone-600'">
                 {{ displaySubtitle }}
             </span>
         </span>
