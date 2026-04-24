@@ -74,19 +74,31 @@ const valueItems = computed(() => {
     const items = [
         {
             title: 'Visi',
+            items: splitLines(form.vision || ''),
             description: form.vision || fallbackAbout.values[0].description,
         },
         {
             title: 'Misi',
+            items: splitLines(form.mission || ''),
             description: form.mission || fallbackAbout.values[1].description,
         },
         {
             title: 'Nilai',
+            items: [],
             description: form.values_text || fallbackAbout.values[2].description,
         },
     ];
 
-    return items.filter((item) => item.description);
+    return items
+        .map((item, index) => ({
+            ...item,
+            items: item.items.length
+                ? item.items
+                : index < 2
+                    ? splitLines(fallbackAbout.values[index].description)
+                    : [],
+        }))
+        .filter((item) => item.description || item.items.length);
 });
 
 const preview = computed(() => ({
@@ -249,22 +261,24 @@ onBeforeUnmount(() => {
                             <p v-if="form.errors.advantages" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.advantages }}</p>
                         </label>
 
-                        <div class="grid gap-4 md:grid-cols-3">
+                        <div class="grid gap-5">
                             <label class="block">
                                 <span class="text-body-sm font-semibold text-brand-ink">Visi</span>
-                                <textarea v-model="form.vision" maxlength="700" rows="4" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
+                                <textarea v-model="form.vision" maxlength="700" rows="5" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
+                                <p class="mt-2 text-xs font-medium uppercase text-stone-500">Tulis satu poin visi per baris.</p>
                                 <p v-if="form.errors.vision" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.vision }}</p>
                             </label>
 
                             <label class="block">
                                 <span class="text-body-sm font-semibold text-brand-ink">Misi</span>
-                                <textarea v-model="form.mission" maxlength="700" rows="4" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
+                                <textarea v-model="form.mission" maxlength="700" rows="5" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
+                                <p class="mt-2 text-xs font-medium uppercase text-stone-500">Tulis satu poin misi per baris.</p>
                                 <p v-if="form.errors.mission" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.mission }}</p>
                             </label>
 
                             <label class="block">
                                 <span class="text-body-sm font-semibold text-brand-ink">Nilai</span>
-                                <textarea v-model="form.values_text" maxlength="700" rows="4" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
+                                <textarea v-model="form.values_text" maxlength="700" rows="5" class="focus-ring mt-2 block w-full rounded-lg border-brand-line text-body-sm shadow-sm focus:border-brand-primary" @focus="setActivePreview('values')" @blur="clearActivePreview" />
                                 <p v-if="form.errors.values_text" class="mt-2 text-body-sm font-medium text-red-700">{{ form.errors.values_text }}</p>
                             </label>
                         </div>
@@ -358,7 +372,13 @@ onBeforeUnmount(() => {
                                             class="rounded-lg border border-amber-100 bg-brand-soft p-4"
                                         >
                                             <p class="text-body-sm font-bold uppercase text-brand-accent">{{ item.title }}</p>
-                                            <p class="mt-2 text-body-sm leading-6 text-stone-700">{{ item.description }}</p>
+                                            <ul v-if="item.items.length" class="mt-2 grid gap-2">
+                                                <li v-for="point in item.items" :key="point" class="flex gap-2 text-body-sm leading-6 text-stone-700">
+                                                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-accent" />
+                                                    <span>{{ point }}</span>
+                                                </li>
+                                            </ul>
+                                            <p v-else class="mt-2 text-body-sm leading-6 text-stone-700">{{ item.description }}</p>
                                         </article>
                                     </div>
                                 </div>

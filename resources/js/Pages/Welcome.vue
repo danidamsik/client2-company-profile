@@ -130,11 +130,17 @@ const aboutAdvantages = computed(() => (
     props.publicAboutSection?.advantages?.length ? props.publicAboutSection.advantages : defaultAdvantages
 ));
 const aboutValues = computed(() => {
+    const splitListItems = (value) => (value || '')
+        .split(/\r\n|\r|\n/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+
     const values = props.publicAboutSection?.values
         ?.filter((item) => item.description)
         .map((item) => ({
             title: item.title,
             description: item.description,
+            items: ['Visi', 'Misi'].includes(item.title) ? splitListItems(item.description) : [],
         })) || [];
 
     return values.length ? values : defaultValues;
@@ -307,45 +313,58 @@ onBeforeUnmount(() => {
         </section>
 
         <SectionContainer id="tentang" tone="white" tight-top>
-            <div class="grid gap-10 lg:grid-cols-[1fr_0.86fr] lg:items-start">
-                <div class="reveal-on-scroll" data-reveal>
-                    <SectionHeading
-                        :eyebrow="aboutContent.eyebrow"
-                        :title="aboutContent.title"
-                        :subtitle="aboutContent.subtitle"
-                    />
+            <div class="grid gap-8">
+                <div class="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+                    <div class="reveal-on-scroll" data-reveal>
+                        <SectionHeading
+                            :eyebrow="aboutContent.eyebrow"
+                            :title="aboutContent.title"
+                            :subtitle="aboutContent.subtitle"
+                        />
+                    </div>
 
-                    <div class="mt-6 grid gap-3">
-                        <div
-                            v-for="item in aboutAdvantages"
-                            :key="item"
-                            class="flex gap-3 rounded-lg border border-brand-line bg-white p-4 shadow-sm"
-                        >
-                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-primary text-brand-ink">
-                                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                                    <path d="m5 10.4 3 3L15.5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </span>
-                            <p class="text-body-md text-stone-700">{{ item }}</p>
+                    <div class="reveal-on-scroll" data-reveal>
+                        <div class="overflow-hidden rounded-[1.25rem] border border-brand-line bg-brand-muted shadow-lift">
+                            <img
+                                :src="aboutContent.image"
+                                alt="Petugas keamanan sedang berjaga di area gedung"
+                                class="aspect-[5/4] w-full object-cover"
+                                :loading="isPrintMode ? 'eager' : 'lazy'"
+                                decoding="async"
+                            />
                         </div>
                     </div>
                 </div>
 
-                <div class="reveal-on-scroll" data-reveal>
-                    <div class="overflow-hidden rounded-lg border border-brand-line bg-brand-muted shadow-lift">
-                        <img
-                            :src="aboutContent.image"
-                            alt="Petugas keamanan sedang berjaga di area gedung"
-                            class="aspect-[4/3] w-full object-cover"
-                            :loading="isPrintMode ? 'eager' : 'lazy'"
-                            decoding="async"
-                        />
+                <div class="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+                    <div class="reveal-on-scroll rounded-[1.25rem] border border-brand-line bg-white p-5 shadow-sm sm:p-6" data-reveal>
+                        <p class="text-body-sm font-bold uppercase text-brand-accent">Keunggulan Utama</p>
+                        <div class="mt-4 grid gap-3">
+                            <div
+                                v-for="item in aboutAdvantages"
+                                :key="item"
+                                class="flex gap-3 rounded-lg border border-brand-line bg-white p-4"
+                            >
+                                <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-brand-primary text-brand-ink">
+                                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                                        <path d="m5 10.4 3 3L15.5 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </span>
+                                <p class="text-body-md text-stone-700">{{ item }}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+                    <div class="reveal-on-scroll grid gap-4 sm:grid-cols-3 lg:grid-cols-1" data-reveal>
                         <BaseCard v-for="item in aboutValues" :key="item.title" tone="soft">
                             <h3 class="text-lg font-bold text-brand-ink">{{ item.title }}</h3>
-                            <p class="mt-2 text-body-sm text-stone-700">{{ item.description }}</p>
+                            <ul v-if="item.items?.length" class="mt-3 grid gap-2">
+                                <li v-for="point in item.items" :key="point" class="flex gap-2 text-body-sm leading-6 text-stone-700">
+                                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-accent" />
+                                    <span>{{ point }}</span>
+                                </li>
+                            </ul>
+                            <p v-else class="mt-2 text-body-sm text-stone-700">{{ item.description }}</p>
                         </BaseCard>
                     </div>
                 </div>
