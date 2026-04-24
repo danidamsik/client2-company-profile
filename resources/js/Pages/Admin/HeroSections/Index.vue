@@ -284,13 +284,6 @@ onBeforeUnmount(() => {
                                 <img :src="preview.image" :alt="preview.title" class="absolute inset-0 h-full w-full object-cover" />
                                 <div class="absolute inset-0 bg-gradient-to-r from-brand-ink via-brand-ink/80 to-brand-ink/25"></div>
                                 <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-brand-ink/70 to-transparent"></div>
-                                <div
-                                    class="absolute left-4 right-4 top-4 z-10 rounded-lg border border-dashed p-3 text-body-sm font-semibold text-brand-primary backdrop-blur-sm transition"
-                                    :class="previewBoxClass('image')"
-                                >
-                                    Gambar hero
-                                </div>
-
                                 <div class="relative z-10 flex min-h-[560px] items-center px-5 py-10 sm:px-6 sm:py-12">
                                     <div class="w-full max-w-4xl">
                                         <div
