@@ -473,20 +473,20 @@ onBeforeUnmount(() => {
                     />
 
                     <div class="mt-7 overflow-hidden rounded-lg border border-white/10 bg-white/10">
-                        <div class="grid divide-y divide-white/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-                            <div class="p-5">
+                        <div class="divide-y divide-white/10">
+                            <div class="min-w-0 p-5 sm:p-6">
                                 <p class="text-body-sm font-bold uppercase text-brand-primary">WhatsApp</p>
-                                <p class="mt-2 text-body-md text-white">{{ companyInfo.whatsapp }}</p>
+                                <p class="mt-2 text-body-lg font-semibold text-white">{{ companyInfo.whatsapp }}</p>
                             </div>
 
-                            <div class="p-5">
+                            <div class="min-w-0 p-5 sm:p-6">
                                 <p class="text-body-sm font-bold uppercase text-brand-primary">Email</p>
-                                <p class="mt-2 text-body-md text-white">{{ companyInfo.email }}</p>
+                                <p class="mt-2 break-words text-body-lg font-semibold leading-relaxed text-white">{{ companyInfo.email }}</p>
                             </div>
 
-                            <div class="p-5">
+                            <div class="min-w-0 p-5 sm:p-6">
                                 <p class="text-body-sm font-bold uppercase text-brand-primary">Lokasi</p>
-                                <p class="mt-2 text-body-md text-white">{{ companyInfo.location }}</p>
+                                <p class="mt-2 text-body-lg font-semibold leading-relaxed text-white">{{ companyInfo.location }}</p>
                             </div>
                         </div>
                     </div>
